@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page - Twitter-like Layout with Carousel</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .carousel-inner img {
+            height: 400px;
+            object-fit: cover;
+        }
+        @media (min-width: 992px) {
+            .sticky-sidebar {
+                position: -webkit-sticky;
+                position: sticky;
+                top: 20px;
+                height: calc(100vh - 40px);
+                overflow-y: auto;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .hide-on-mobile {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Club Next</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./profile.html">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./private_message.html">Messages</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="focusCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://via.placeholder.com/1200x400" class="d-block w-100" alt="Slide 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Focus Slide 1</h5>
+                    <p>Some representative placeholder content for the first slide.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1200x400" class="d-block w-100" alt="Slide 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Focus Slide 2</h5>
+                    <p>Some representative placeholder content for the second slide.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1200x400" class="d-block w-100" alt="Slide 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Focus Slide 3</h5>
+                    <p>Some representative placeholder content for the third slide.</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#focusCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#focusCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3 hide-on-mobile sticky-sidebar">
+                <div class="card" id="userProfileCard">
+                    <div class="card-body">
+                        <h5 class="card-title" id="userProfileTitle">User Profile</h5>
+                        <p class="card-text" id="userProfileText">Some quick info about the user profile here.</p>
+                        <a href="#" id="loginButton" class="btn btn-primary">Log In</a>
+                        <a href="#" id="viewProfileButton" class="btn btn-primary d-none">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Welcome to Club Next!</h5>
+                            <p class="card-text">This is a Twitter-like home page, showcasing popular posts and activities from people you follow.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@user123</h6>
+                            <p class="card-text">This is a sample post from a user, illustrating how posts would be displayed on the home page.</p>
+                            <a href="#" class="card-link">Like</a>
+                            <a href="#" class="card-link">Comment</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@user456</h6>
+                            <p class="card-text">Another sample post from a different user. Content displayed here is dynamic and fetched via API calls.</p>
+                            <a href="#" class="card-link">Like</a>
+                            <a href="#" class="card-link">Comment</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@user789</h6>
+                            <p class="card-text">Yet another user post demonstrating more content on the page.</p>
+                            <a href="#" class="card-link">Like</a>
+                            <a href="#" class="card-link">Comment</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@user101</h6>
+                            <p class="card-text">Here is another example of a user post with some engaging content.</p>
+                            <a href="#" class="card-link">Like</a>
+                            <a href="#" class="card-link">Comment</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@user202</h6>
+                            <p class="card-text">Adding more posts to provide a better testing scenario.</p>
+                            <a href="#" class="card-link">Like</a>
+                            <a href="#" class="card-link">Comment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 hide-on-mobile sticky-sidebar">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Trending Topics</h5>
+                        <p class="card-text">List of trending topics goes here.</p>
+                        <a href="#" class="btn btn-outline-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mock session information
+            let userLoggedIn = false; // Change to true if user is logged in
+
+            if (userLoggedIn) {
+                document.getElementById("loginButton").classList.add("d-none");
+                document.getElementById("viewProfileButton").classList.remove("d-none");
+                document.getElementById("userProfileText").textContent = "Welcome back, user123!";
+            } else {
+                document.getElementById("loginButton").classList.remove("d-none");
+                document.getElementById("viewProfileButton").classList.add("d-none");
+                document.getElementById("userProfileText").textContent = "Please log in to see your profile.";
+            }
+        });
+    </script>
+</body>
+</html>
