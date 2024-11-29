@@ -1,4 +1,7 @@
+# ActivityPub论坛API
+
 ## **ActivityPub 基础概念**
+
 - **Actor**: 用户或服务的表示，通常对应用户 (`Person`)。
 - **Object**: 操作的目标，如帖子、评论、图片等。
 - **Activity**: 动作的表达，如 `Create`、`Like`、`Follow`。
@@ -17,6 +20,7 @@
    - ActivityPub `Actor` 对象。
    - **GET** `/api/activitypub/actor/{username}`
    - 返回 ActivityPub Actor 数据：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -49,6 +53,7 @@
    - ActivityPub `Object` 表示帖子的内容。
    - **GET** `/api/activitypub/object/{post_id}`
    - 返回帖子的 ActivityPub 格式：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -72,6 +77,7 @@
    - ActivityPub `Create` Activity。
    - **POST** `/api/activitypub/outbox`
    - 请求体：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -100,6 +106,7 @@
    - 使用 ActivityPub `Inbox`。
    - **GET** `/api/activitypub/inbox`
    - 返回用户私信（非公共）：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -121,6 +128,7 @@
    - ActivityPub `Create` Activity。
    - **POST** `/api/activitypub/outbox`
    - 请求体：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -142,6 +150,7 @@
    - ActivityPub `Follow` Activity。
    - **POST** `/api/activitypub/outbox`
    - 请求体：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -155,6 +164,7 @@
    - ActivityPub `Undo` Activity。
    - **POST** `/api/activitypub/outbox`
    - 请求体：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -172,6 +182,7 @@
    - ActivityPub `Like` Activity。
    - **POST** `/api/activitypub/outbox`
    - 请求体：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",
@@ -185,6 +196,7 @@
    - ActivityPub `Undo` Activity。
    - **POST** `/api/activitypub/outbox`
    - 请求体：
+
      ```json
      {
        "@context": "https://www.w3.org/ns/activitystreams",

@@ -1,5 +1,9 @@
+# 基础架构
+
 ## **整体架构**
+
 ### 技术选型
+
 1. **前端**：
    - **UI 框架**：Bootstrap（提供响应式样式）。
    - **客户端逻辑**：纯 JavaScript（使用 Fetch API 调用后端 REST API）。
@@ -19,7 +23,8 @@
 ---
 
 ## **系统架构图**
-```
+
+```plaintext
 用户浏览器
     |
     V
@@ -35,9 +40,11 @@
 ---
 
 ## **前端设计**
+
 前端负责展示页面，提供与后端 REST API 的交互。
 
 ### **文件结构**
+
 ```plaintext
 frontend/
 ├── index.html         # 主页
@@ -57,6 +64,7 @@ frontend/
 ```
 
 ### **主要页面功能**
+
 1. **主页 (`index.html`)**
    - 显示论坛分类和热门帖子。
    - 用户登录状态检查，显示“登录”或“个人中心”。
@@ -78,6 +86,7 @@ frontend/
    - 实时消息更新：使用轮询或 WebSocket。
 
 ### **示例：`main.js`**
+
 ```javascript
 document.addEventListener("DOMContentLoaded", () => {
     const apiBase = "http://localhost:8080/api";
@@ -96,9 +105,11 @@ document.addEventListener("DOMContentLoaded", () => {
 ---
 
 ## **后端设计**
+
 后端使用 `httplib` 提供 REST API 服务，符合 ActivityPub 标准。
 
 ### **项目结构**
+
 ```plaintext
 backend/
 ├── main.cpp           # 主程序入口
@@ -118,7 +129,9 @@ backend/
 ```
 
 ### **核心代码**
+
 #### 初始化 HTTP 服务器 (`main.cpp`)
+
 ```cpp
 #include <httplib.h>
 #include "routes/user.h"
@@ -147,6 +160,7 @@ int main() {
 ```
 
 #### 用户登录接口示例 (`user.cpp`)
+
 ```cpp
 #include <httplib.h>
 #include <json/json.h>
@@ -176,6 +190,7 @@ void handle_user_login(const httplib::Request &req, httplib::Response &res) {
 ```
 
 ### **数据库设计**
+
 后端数据库使用 SQLite 或 PostgreSQL。数据库表设计参考之前的数据库方案。
 
 ---
