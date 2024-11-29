@@ -1,0 +1,30 @@
+.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4, .markdown-content h5, .markdown-content h6 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.markdown-content p {
+    margin-bottom: 0.5rem;
+}
+
+.markdown-content ul {
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.markdown-content code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
