@@ -320,4 +320,84 @@
     "message": "Post unliked successfully"
   }
   ```
-  
+
+---
+
+## 标签相关 API
+
+### 1. **获取标签列表**
+
+- **方法**: `GET`
+- **路径**: `/api/tags`
+- **描述**: 获取所有可用标签的列表。
+- **响应**:
+
+  ```json
+  {
+    "tags": [
+      {
+        "id": "int",
+        "name": "string"
+      },
+      ...
+    ]
+  }
+  ```
+
+---
+
+### 2. **获取帖子的标签**
+
+- **方法**: `GET`
+- **路径**: `/api/forum/post/{post_id}/tags`
+- **描述**: 获取指定帖子的标签列表。
+- **响应**:
+
+  ```json
+  {
+    "post_id": "int",
+    "tags": [
+      {
+        "id": "int",
+        "name": "string"
+      },
+      ...
+    ]
+  }
+  ```
+
+---
+
+### 3. **给帖子添加标签**
+
+- **方法**: `POST`
+- **路径**: `/api/forum/post/{post_id}/tags`
+- **描述**: 为指定帖子添加标签（需登录）。
+- **请求体**:
+
+  ```json
+  {
+    "tags": [
+      { "id": "int" },
+      { "id": "int" },
+      ...
+    ]
+  }
+  ```
+
+- **响应**:
+  - 成功：
+
+    ```json
+    {
+      "message": "Tags added successfully"
+    }
+    ```
+
+  - 错误：
+
+    ```json
+    {
+      "error": "Tag does not exist"
+    }
+    ```
