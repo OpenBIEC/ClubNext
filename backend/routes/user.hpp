@@ -8,8 +8,6 @@
 extern SessionStore session_store;
 extern UserStore user_store;
 
-bool authenticate_user(const httplib::Request &req, std::string &username);
-
 void handle_user_register(const httplib::Request &req, httplib::Response &res);
 void handle_user_login(const httplib::Request &req, httplib::Response &res);
 void handle_user_profile(const httplib::Request &req, httplib::Response &res);

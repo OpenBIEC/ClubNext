@@ -2,9 +2,6 @@
 #define MODELS_USER_STORE_HPP
 
 #include <atomic>
-#include <chrono>
-#include <fstream>
-#include <mutex>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <tbb/concurrent_hash_map.h>
@@ -55,5 +52,7 @@ class UserStore
 
     void load_from_file();
 };
+
+extern UserStore user_store;
 
 #endif // MODELS_USER_STORE_HPP

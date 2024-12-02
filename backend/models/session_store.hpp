@@ -30,4 +30,6 @@ class SessionStore
     std::string generate_token() const;
 };
 
+extern SessionStore session_store;
+
 #endif // MODELS_SESSION_STORE_HPP

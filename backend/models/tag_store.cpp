@@ -1,10 +1,10 @@
-#include "models/user_store.hpp"
+#include "models/tag_store.hpp"
 #include <chrono>
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp>
 
-UserStore::UserStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
+// 构造函数
+TagStore::TagStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {
     load_from_file();
     save_thread = std::thread([this]() {
@@ -16,7 +16,8 @@ UserStore::UserStore(const std::string &file_path) : file_path(file_path), stop_
     });
 }
 
-UserStore::~UserStore()
+// 析构函数
+TagStore::~TagStore()
 {
     stop_saving.store(true);
     if (save_thread.joinable())
@@ -26,53 +27,37 @@ UserStore::~UserStore()
     save_to_file();
 }
 
-bool UserStore::register_user(const User &user)
+// 添加标签
+bool TagStore::add_tag(const Tag &tag)
 {
     MapType::accessor acc;
-    if (users.insert(acc, user.username))
+    if (tags.insert(acc, tag.id))
     {
-        acc->second = user;
+        acc->second = tag;
         return true;
     }
     return false;
 }
 
-bool UserStore::login_user(const std::string &username, const std::string &password)
+// 获取标签
+bool TagStore::get_tag(int id, Tag &tag)
 {
     MapType::const_accessor acc;
-    if (users.find(acc, username))
+    if (tags.find(acc, id))
     {
-        return acc->second.password == password;
-    }
-    return false;
-}
-
-bool UserStore::get_user(const std::string &username, User &user)
-{
-    MapType::const_accessor acc;
-    if (users.find(acc, username))
-    {
-        user = acc->second;
+        tag = acc->second;
         return true;
     }
     return false;
 }
 
-void UserStore::update_avatar(const std::string &username, const std::string &avatar_url)
-{
-    MapType::accessor acc;
-    if (users.find(acc, username))
-    {
-        acc->second.avatar_url = avatar_url;
-    }
-}
-
-void UserStore::save_to_file()
+// 保存到文件
+void TagStore::save_to_file()
 {
     try
     {
         nlohmann::json json_data = nlohmann::json::array();
-        for (const auto &item : users)
+        for (const auto &item : tags)
         {
             json_data.push_back(item.second.to_json());
         }
@@ -82,11 +67,12 @@ void UserStore::save_to_file()
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error saving user store to file: " << e.what() << std::endl;
+        std::cerr << "Error saving tag store to file: " << e.what() << std::endl;
     }
 }
 
-void UserStore::load_from_file()
+// 从文件加载
+void TagStore::load_from_file()
 {
     try
     {
@@ -97,14 +83,20 @@ void UserStore::load_from_file()
             file >> json_data;
             for (const auto &item : json_data)
             {
-                User user = User::from_json(item);
-                register_user(user);
+                Tag tag = Tag::from_json(item);
+                add_tag(tag);
             }
             file.close();
         }
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error loading user store from file: " << e.what() << std::endl;
+        std::cerr << "Error loading tag store from file: " << e.what() << std::endl;
     }
+}
+
+// 获取 tags 的引用
+TagStore::MapType &TagStore::get_tags()
+{
+    return tags;
 }

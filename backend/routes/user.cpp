@@ -1,19 +1,10 @@
-#include "user.hpp"
+#include "routes/user.hpp"
 #include "config.hpp"
+#include "models/authenticate.hpp"
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
 
-bool authenticate_user(const httplib::Request &req, std::string &username)
-{
-    auto auth_header = req.get_header_value("Authorization");
-    if (!auth_header.empty() && auth_header.rfind("Bearer ", 0) == 0)
-    {
-        std::string token = auth_header.substr(7);
-        return session_store.validate_session(token, username);
-    }
-    return false;
-}
+using json = nlohmann::json;
 
 void handle_user_register(const httplib::Request &req, httplib::Response &res)
 {

@@ -1,10 +1,9 @@
-#include "models/user_store.hpp"
+#include "post_store.hpp"
 #include <chrono>
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp>
 
-UserStore::UserStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
+PostStore::PostStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {
     load_from_file();
     save_thread = std::thread([this]() {
@@ -16,7 +15,7 @@ UserStore::UserStore(const std::string &file_path) : file_path(file_path), stop_
     });
 }
 
-UserStore::~UserStore()
+PostStore::~PostStore()
 {
     stop_saving.store(true);
     if (save_thread.joinable())
@@ -26,53 +25,34 @@ UserStore::~UserStore()
     save_to_file();
 }
 
-bool UserStore::register_user(const User &user)
+bool PostStore::add_post(const Post &post)
 {
     MapType::accessor acc;
-    if (users.insert(acc, user.username))
+    if (posts.insert(acc, post.id))
     {
-        acc->second = user;
+        acc->second = post;
         return true;
     }
     return false;
 }
 
-bool UserStore::login_user(const std::string &username, const std::string &password)
+bool PostStore::get_post(int id, Post &post)
 {
     MapType::const_accessor acc;
-    if (users.find(acc, username))
+    if (posts.find(acc, id))
     {
-        return acc->second.password == password;
-    }
-    return false;
-}
-
-bool UserStore::get_user(const std::string &username, User &user)
-{
-    MapType::const_accessor acc;
-    if (users.find(acc, username))
-    {
-        user = acc->second;
+        post = acc->second;
         return true;
     }
     return false;
 }
 
-void UserStore::update_avatar(const std::string &username, const std::string &avatar_url)
-{
-    MapType::accessor acc;
-    if (users.find(acc, username))
-    {
-        acc->second.avatar_url = avatar_url;
-    }
-}
-
-void UserStore::save_to_file()
+void PostStore::save_to_file()
 {
     try
     {
         nlohmann::json json_data = nlohmann::json::array();
-        for (const auto &item : users)
+        for (const auto &item : posts)
         {
             json_data.push_back(item.second.to_json());
         }
@@ -82,11 +62,11 @@ void UserStore::save_to_file()
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error saving user store to file: " << e.what() << std::endl;
+        std::cerr << "Error saving post store to file: " << e.what() << std::endl;
     }
 }
 
-void UserStore::load_from_file()
+void PostStore::load_from_file()
 {
     try
     {
@@ -97,14 +77,19 @@ void UserStore::load_from_file()
             file >> json_data;
             for (const auto &item : json_data)
             {
-                User user = User::from_json(item);
-                register_user(user);
+                Post post = Post::from_json(item);
+                add_post(post);
             }
             file.close();
         }
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error loading user store from file: " << e.what() << std::endl;
+        std::cerr << "Error loading post store from file: " << e.what() << std::endl;
     }
+}
+
+PostStore::MapType &PostStore::get_posts()
+{
+    return posts;
 }
