@@ -90,7 +90,42 @@
 
 ---
 
-### 4. **上传/更新头像**
+### 4. **更改用户个人资料 API**
+
+**方法**: `POST`  
+**路径**: `/api/user/profile/update`  
+**描述**: 更新当前登录用户的个人资料。  
+
+**请求体**:
+
+```json
+{
+  "bio": "string",
+  "avatar_url": "string"
+}
+```
+
+**响应**:
+
+- **成功**:
+
+  ```json
+  {
+    "message": "Profile updated successfully"
+  }
+  ```
+
+- **失败**:
+
+  ```json
+  {
+    "error": "User not found"
+  }
+  ```
+
+---
+
+### 5. **上传/更新头像**
 
 - **方法**: `POST`
 - **路径**: `/api/user/avatar`
@@ -108,7 +143,7 @@
 
 ---
 
-### 5. **获取陌生用户的基础资料**
+### 6. **获取陌生用户的基础资料**
 
 - **方法**: `GET`
 - **路径**: `/api/user/{user_id}/profile`
