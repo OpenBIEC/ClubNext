@@ -7,6 +7,7 @@
 #include <tbb/concurrent_hash_map.h>
 #include <thread>
 
+// 定义 Tag 结构体
 struct Tag
 {
     int id;
@@ -23,6 +24,7 @@ struct Tag
     }
 };
 
+// 定义 TagStore 类
 class TagStore
 {
   public:

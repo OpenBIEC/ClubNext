@@ -1,9 +1,7 @@
 #include "models/tag_store.hpp"
-#include <chrono>
 #include <fstream>
 #include <iostream>
 
-// 构造函数
 TagStore::TagStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {
     load_from_file();
@@ -16,7 +14,6 @@ TagStore::TagStore(const std::string &file_path) : file_path(file_path), stop_sa
     });
 }
 
-// 析构函数
 TagStore::~TagStore()
 {
     stop_saving.store(true);
@@ -27,7 +24,6 @@ TagStore::~TagStore()
     save_to_file();
 }
 
-// 添加标签
 bool TagStore::add_tag(const Tag &tag)
 {
     MapType::accessor acc;
@@ -39,7 +35,6 @@ bool TagStore::add_tag(const Tag &tag)
     return false;
 }
 
-// 获取标签
 bool TagStore::get_tag(int id, Tag &tag)
 {
     MapType::const_accessor acc;
@@ -51,7 +46,6 @@ bool TagStore::get_tag(int id, Tag &tag)
     return false;
 }
 
-// 保存到文件
 void TagStore::save_to_file()
 {
     try
@@ -71,7 +65,6 @@ void TagStore::save_to_file()
     }
 }
 
-// 从文件加载
 void TagStore::load_from_file()
 {
     try
@@ -95,7 +88,6 @@ void TagStore::load_from_file()
     }
 }
 
-// 获取 tags 的引用
 TagStore::MapType &TagStore::get_tags()
 {
     return tags;

@@ -3,7 +3,6 @@
 #include "models/authenticate.hpp"
 #include <nlohmann/json.hpp>
 
-
 using json = nlohmann::json;
 
 void handle_user_register(const httplib::Request &req, httplib::Response &res)
@@ -12,7 +11,8 @@ void handle_user_register(const httplib::Request &req, httplib::Response &res)
     {
         json body = json::parse(req.body);
 
-        User user = {body["username"].get<std::string>(), body["password"].get<std::string>(), "", "", 0, 0};
+        User user = {
+            body["username"].get<std::string>(), body["password"].get<std::string>(), "", "", 0, 0, std::time(nullptr)};
 
         if (user_store.register_user(user))
         {
@@ -76,11 +76,9 @@ void handle_user_profile(const httplib::Request &req, httplib::Response &res)
     User user;
     if (user_store.get_user(username, user))
     {
-        nlohmann::json response = {{"username", user.username},
-                                   {"bio", user.bio},
-                                   {"avatar", user.avatar_url},
-                                   {"followers", user.followers},
-                                   {"followings", user.followings}};
+        nlohmann::json response = {{"username", user.username},     {"bio", user.bio},
+                                   {"avatar", user.avatar_url},     {"followers", user.followers},
+                                   {"followings", user.followings}, {"joined_at", user.joined_at}};
         res.status = 200;
         res.set_content(response.dump(), "application/json");
     }
@@ -160,7 +158,7 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
     try
     {
 
-        std::string user_dir = Config::UPLOAD_DIR + username + "/";
+        std::string user_dir = Config::USER_DIR + username + "/";
         std::filesystem::create_directories(user_dir);
 
         auto now = std::time(nullptr);
