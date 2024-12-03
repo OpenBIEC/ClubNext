@@ -2,8 +2,10 @@
 #include "config.hpp"
 #include "models/authenticate.hpp"
 #include "models/send_verification_code.hpp"
+#include "models/session_store.hpp"
 #include "models/user_store.hpp"
 #include <nlohmann/json.hpp>
+
 
 using json = nlohmann::json;
 

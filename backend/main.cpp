@@ -1,8 +1,11 @@
+#include "models/message_store.hpp"
 #include "models/post_store.hpp"
 #include "models/session_store.hpp"
 #include "models/tag_store.hpp"
 #include "models/user_store.hpp"
 #include "routes/forum.hpp"
+#include "routes/message.hpp"
+#include "routes/social.hpp"
 #include "routes/user.hpp"
 #include <chrono>
 #include <csignal>
@@ -22,8 +25,9 @@ void session_cleanup_task()
 }
 
 UserStore user_store("user_store.json");
-PostStore post_store("posts.json");
-TagStore tag_store("tags.json");
+PostStore post_store("posts_store.json");
+TagStore tag_store("tags_store.json");
+MessageStore message_store("message_store.json");
 
 void signal_handler(int signal)
 {
@@ -33,6 +37,7 @@ void signal_handler(int signal)
         user_store.save_to_file();
         post_store.save_to_file();
         tag_store.save_to_file();
+        message_store.save_to_file();
         std::cout << "Data saved successfully. Exiting..." << std::endl;
         exit(0);
     }
@@ -62,6 +67,14 @@ int main()
     server.Get("/api/forum/recommend", get_recommend_posts);
     server.Get("/api/tags", get_tags);
     server.Post(R"(/api/forum/post/(\d+)/tags)", add_tags_to_post);
+
+    server.Post(R"(/api/user/(\w+)/follow)", handle_follow_user);
+    server.Delete(R"(/api/user/(\w+)/unfollow)", handle_unfollow_user);
+    server.Post(R"(/api/forum/post/(\d+)/like)", handle_like_post);
+    server.Delete(R"(/api/forum/post/(\d+)/like)", handle_unlike_post);
+
+    server.Get("/api/message/inbox", handle_get_messages);
+    server.Post("/api/message/send", handle_send_message);
 
     std::cout << "Server running at http://0.0.0.0:8888" << std::endl;
 

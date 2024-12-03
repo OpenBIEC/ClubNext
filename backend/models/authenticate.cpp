@@ -1,5 +1,6 @@
 #include "models/authenticate.hpp"
-#include "user_store.hpp"
+#include "models/session_store.hpp"
+#include "models/user_store.hpp"
 
 bool authenticate_user(const httplib::Request &req, std::string &username)
 {
