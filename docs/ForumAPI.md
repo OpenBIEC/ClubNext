@@ -12,8 +12,8 @@
   ```json
   {
     "username": "string",
-    "password": "string",
-    "bio": "string"
+    "email":"string",
+    "password": "string"
   }
   ```
 
@@ -160,6 +160,51 @@
     "joined_at": "datetime"
   }
   ```
+
+---
+
+### 7. **发送验证码**
+
+- **URL**: `/api/user/verify`
+- **方法**: `GET`
+- **描述**: 发送验证码到指定的用户邮箱。
+
+- **请求参数**
+
+| 参数名   | 类型     | 是否必填 | 描述             |
+|----------|----------|----------|------------------|
+| `email`  | `string` | 必填     | 用户接收验证码的邮箱地址。 |
+
+- **响应**
+
+```json
+{
+    "message": "Verification code sent successfully"
+}
+```
+
+---
+
+### 8. **验证验证码**
+
+- **URL**: `/api/user/validate`
+- **方法**: `GET`
+- **描述**: 验证用户输入的验证码是否正确。
+
+- **请求参数**
+
+| 参数名   | 类型     | 是否必填 | 描述                  |
+|----------|----------|----------|-----------------------|
+| `email`  | `string` | 必填     | 用户接收验证码的邮箱地址。 |
+| `code`   | `string` | 必填     | 用户输入的验证码。      |
+
+- **响应**
+
+```json
+{
+    "message": "Verification successful"
+}
+```
 
 ---
 

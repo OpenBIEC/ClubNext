@@ -1,6 +1,8 @@
 #include "routes/user.hpp"
 #include "config.hpp"
 #include "models/authenticate.hpp"
+#include "models/send_verification_code.hpp"
+#include "models/user_store.hpp"
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
@@ -11,8 +13,15 @@ void handle_user_register(const httplib::Request &req, httplib::Response &res)
     {
         json body = json::parse(req.body);
 
-        User user = {
-            body["username"].get<std::string>(), body["password"].get<std::string>(), "", "", 0, 0, std::time(nullptr)};
+        User user = {body["username"].get<std::string>(),
+                     body["password"].get<std::string>(),
+                     body["email"].get<std::string>(),
+                     "",
+                     "",
+                     0,
+                     0,
+                     std::time(nullptr),
+                     false};
 
         if (user_store.register_user(user))
         {
@@ -205,5 +214,71 @@ void handle_user_get_profile(const httplib::Request &req, httplib::Response &res
     {
         res.status = 404;
         res.set_content(R"({"error":"User not found"})", "application/json");
+    }
+}
+
+std::string generate_verification_code(size_t length = 6)
+{
+    const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<size_t> distribution(0, sizeof(charset) - 2);
+
+    std::string code;
+    for (size_t i = 0; i < length; ++i)
+    {
+        code += charset[distribution(generator)];
+    }
+    return code;
+}
+
+void send_verify_email(const httplib::Request &req, httplib::Response &res)
+{
+    if (!req.has_param("username"))
+    {
+        res.status = 400;
+        res.set_content("{\"error\":\"User parameter is required\"}", "application/json");
+        return;
+    }
+
+    std::string username = req.get_param_value("username");
+    std::string email = req.get_param_value("email");
+    std::string code = generate_verification_code();
+
+    if (user_store.is_active_user(username, code))
+    {
+        res.status = 500;
+        res.set_content("{\"error\":\"Accout email already verified\"}", "application/json");
+    }
+
+    if (send_verification_code(email, code))
+    {
+        res.set_content("{\"message\":\"Verification code sent successfully\"}", "application/json");
+    }
+    else
+    {
+        res.status = 500;
+        res.set_content("{\"error\":\"Failed to send email\"}", "application/json");
+    }
+}
+
+void verify_user_email(const httplib::Request &req, httplib::Response &res)
+{
+    if (!req.has_param("username") || !req.has_param("code"))
+    {
+        res.status = 400;
+        res.set_content("{\"error\":\"Username and code parameters are required\"}", "application/json");
+        return;
+    }
+
+    std::string username = req.get_param_value("username");
+    std::string code = req.get_param_value("code");
+
+    std::string stored_code;
+    if (!user_store.active_user(username, stored_code))
+    {
+        res.status = 401;
+        res.set_content("{\"error\":\"Invalid verification code\"}", "application/json");
+        return;
     }
 }

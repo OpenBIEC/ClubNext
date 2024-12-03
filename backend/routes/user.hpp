@@ -14,5 +14,7 @@ void handle_user_profile(const httplib::Request &req, httplib::Response &res);
 void handle_user_update_profile(const httplib::Request &req, httplib::Response &res);
 void handle_user_update_avatar(const httplib::Request &req, httplib::Response &res);
 void handle_user_get_profile(const httplib::Request &req, httplib::Response &res);
+void verify_user_email(const httplib::Request &req, httplib::Response &res);
+void send_verify_email(const httplib::Request &req, httplib::Response &res);
 
 #endif // ROUTES_USER_HPP

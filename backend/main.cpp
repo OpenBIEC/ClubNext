@@ -53,6 +53,8 @@ int main()
     server.Post("/api/user/profile/update", handle_user_update_profile);
     server.Post("/api/user/avatar", handle_user_update_avatar);
     server.Get(R"(/api/user/(\w+)/profile)", handle_user_get_profile);
+    server.Get("/api/user/verify", send_verify_email);
+    server.Get("/api/user/validate", verify_user_email);
 
     server.Get(R"(/api/forum/post/(\d+))", get_post_detail);
     server.Post("/api/forum/post", create_post);
