@@ -1,4 +1,5 @@
 #include "models/session_store.hpp"
+#include <cstdio>
 #include <random>
 
 std::string SessionStore::generate_token() const
@@ -20,6 +21,33 @@ std::string SessionStore::create_session(const std::string &username)
     Session session{username, std::chrono::steady_clock::now() + std::chrono::hours(1)};
     sessions.insert({token, session});
     return token;
+}
+
+bool SessionStore::remove_session(std::string &username)
+{
+    for (auto it = sessions.begin(); it != sessions.end(); ++it)
+    {
+        MapType::accessor accessor;
+        if (sessions.find(accessor, it->first) && accessor->second.username == username)
+        {
+            sessions.erase(accessor);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SessionStore::exist_session(std::string &username)
+{
+    for (auto it = sessions.begin(); it != sessions.end(); ++it)
+    {
+        MapType::accessor accessor;
+        if (sessions.find(accessor, it->first) && accessor->second.username == username)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool SessionStore::validate_session(const std::string &token, std::string &username)

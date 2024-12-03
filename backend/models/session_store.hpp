@@ -18,7 +18,9 @@ class SessionStore
     using MapType = tbb::concurrent_hash_map<std::string, Session>;
 
     std::string create_session(const std::string &username);
+    bool remove_session(std::string &username);
 
+    bool exist_session(std::string &username);
     bool validate_session(const std::string &token, std::string &username);
 
     void cleanup_sessions();

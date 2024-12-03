@@ -1,4 +1,5 @@
 #include "models/user_store.hpp"
+#include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <iostream>
@@ -91,6 +92,54 @@ void UserStore::update_avatar(const std::string &username, const std::string &av
     if (users.find(acc, username))
     {
         acc->second.avatar_url = avatar_url;
+    }
+}
+
+void UserStore::follower_user(const std::string &username, const std::string &user_id)
+{
+    MapType::accessor acc;
+    if (users.find(acc, username))
+    {
+        acc->second.followers++;
+        acc->second.follower_names.push_back(user_id);
+    }
+}
+
+void UserStore::following_user(const std::string &username, const std::string &user_id)
+{
+    MapType::accessor acc;
+    if (users.find(acc, username))
+    {
+        acc->second.followings++;
+        acc->second.following_names.push_back(user_id);
+    }
+}
+
+void UserStore::unfollower_user(const std::string &username, const std::string &user_id)
+{
+    MapType::accessor acc;
+    if (users.find(acc, username))
+    {
+        auto item = std::find(acc->second.follower_names.begin(), acc->second.follower_names.end(), user_id);
+        if (item != acc->second.follower_names.end())
+        {
+            acc->second.followers--;
+            acc->second.follower_names.erase(item);
+        }
+    }
+}
+
+void UserStore::unfollowing_user(const std::string &username, const std::string &user_id)
+{
+    MapType::accessor acc;
+    if (users.find(acc, username))
+    {
+        auto item = std::find(acc->second.following_names.begin(), acc->second.following_names.end(), user_id);
+        if (item != acc->second.following_names.end())
+        {
+            acc->second.followings--;
+            acc->second.following_names.erase(item);
+        }
     }
 }
 

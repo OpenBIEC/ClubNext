@@ -1,10 +1,21 @@
 #include "routes/social.hpp"
+#include "models/authenticate.hpp"
 #include "models/post_store.hpp"
 #include "models/user_store.hpp"
 
 void handle_follow_user(const httplib::Request &req, httplib::Response &res)
 {
+
     auto user_id = req.matches[1];
+    std::string username;
+
+    if (!authenticate_user(req, username))
+    {
+        res.status = 401;
+        res.set_content(R"({"error":"Unauthorized"})", "application/json");
+        return;
+    }
+
     User user;
 
     if (!user_store.get_user(user_id, user))
@@ -14,7 +25,8 @@ void handle_follow_user(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    user.followers++;
+    user_store.following_user(username, user_id);
+    user_store.follower_user(user_id, username);
     user_store.save_to_file();
 
     res.set_content("{\"message\":\"Followed successfully\"}", "application/json");
@@ -23,6 +35,15 @@ void handle_follow_user(const httplib::Request &req, httplib::Response &res)
 void handle_unfollow_user(const httplib::Request &req, httplib::Response &res)
 {
     auto user_id = req.matches[1];
+    std::string username;
+
+    if (!authenticate_user(req, username))
+    {
+        res.status = 401;
+        res.set_content(R"({"error":"Unauthorized"})", "application/json");
+        return;
+    }
+
     User user;
 
     if (!user_store.get_user(user_id, user))
@@ -32,8 +53,8 @@ void handle_unfollow_user(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    if (user.followers > 0)
-        user.followers--;
+    user_store.unfollowing_user(username, user_id);
+    user_store.unfollower_user(user_id, username);
     user_store.save_to_file();
 
     res.set_content("{\"message\":\"Unfollowed successfully\"}", "application/json");

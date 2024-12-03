@@ -5,7 +5,7 @@
 #include "models/session_store.hpp"
 #include "models/user_store.hpp"
 #include <nlohmann/json.hpp>
-
+#include <vector>
 
 using json = nlohmann::json;
 
@@ -20,6 +20,8 @@ void handle_user_register(const httplib::Request &req, httplib::Response &res)
                      body["email"].get<std::string>(),
                      "",
                      "",
+                     std::vector<std::string>(),
+                     std::vector<std::string>(),
                      0,
                      0,
                      std::time(nullptr),
@@ -54,6 +56,7 @@ void handle_user_login(const httplib::Request &req, httplib::Response &res)
 
         if (user_store.login_user(username, password))
         {
+            session_store.remove_session(username);
 
             std::string token = session_store.create_session(username);
 
