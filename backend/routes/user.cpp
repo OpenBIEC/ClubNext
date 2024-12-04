@@ -147,7 +147,6 @@ void handle_user_update_profile(const httplib::Request &req, httplib::Response &
 
 void handle_user_update_avatar(const httplib::Request &req, httplib::Response &res)
 {
-
     std::string username;
     if (!authenticate_user(req, username))
     {
@@ -173,6 +172,27 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
 
     try
     {
+        std::string content_type = req.get_header_value("Content-Type");
+        std::string extension;
+
+        if (content_type == "image/png")
+        {
+            extension = "png";
+        }
+        else if (content_type == "image/jpeg")
+        {
+            extension = "jpg";
+        }
+        else if (content_type == "image/gif")
+        {
+            extension = "gif";
+        }
+        else
+        {
+            res.status = 400;
+            res.set_content(R"({"error":"Unsupported image type"})", "application/json");
+            return;
+        }
 
         std::string user_dir = Config::USER_DIR + username + "/";
         std::filesystem::create_directories(user_dir);
@@ -180,7 +200,7 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
         auto now = std::time(nullptr);
         std::stringstream timestamp;
         timestamp << std::put_time(std::localtime(&now), "%Y%m%d%H%M%S");
-        std::string filename = "avatar_" + timestamp.str() + ".png";
+        std::string filename = "avatar_" + timestamp.str() + "." + extension;
 
         std::string filepath = user_dir + filename;
         std::ofstream ofs(filepath, std::ios::binary);
@@ -188,7 +208,6 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
         ofs.close();
 
         std::string avatar_url = Config::BASE_URL + username + "/" + filename;
-
         user_store.update_avatar(username, avatar_url);
 
         nlohmann::json response = {{"message", "Avatar uploaded successfully"}, {"avatar_url", avatar_url}};
@@ -212,8 +231,8 @@ void handle_user_get_profile(const httplib::Request &req, httplib::Response &res
         json response = {{"username", user.username},
                          {"bio", user.bio},
                          {"avatar", user.avatar_url},
-                         {"followers", static_cast<int>(user.followers)},
-                         {"followings", static_cast<int>(user.followings)},
+                         {"followers", user.followers.load()},
+                         {"followings", user.followings.load()},
                          {"joined_at", user.joined_at}};
         res.status = 200;
         res.set_content(response.dump(), "application/json");

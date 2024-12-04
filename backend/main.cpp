@@ -1,8 +1,10 @@
+#include "models/comment_store.hpp"
 #include "models/message_store.hpp"
 #include "models/post_store.hpp"
 #include "models/session_store.hpp"
 #include "models/tag_store.hpp"
 #include "models/user_store.hpp"
+#include "routes/comment.hpp"
 #include "routes/forum.hpp"
 #include "routes/message.hpp"
 #include "routes/social.hpp"
@@ -12,6 +14,7 @@
 #include <httplib.h>
 #include <iostream>
 #include <thread>
+
 
 SessionStore session_store;
 
@@ -28,6 +31,7 @@ UserStore user_store("user_store.json");
 PostStore post_store("posts_store.json");
 TagStore tag_store("tags_store.json");
 MessageStore message_store("message_store.json");
+CommentStore comment_store;
 
 void signal_handler(int signal)
 {
@@ -38,6 +42,7 @@ void signal_handler(int signal)
         post_store.save_to_file();
         tag_store.save_to_file();
         message_store.save_to_file();
+        comment_store.save_to_file();
         std::cout << "Data saved successfully. Exiting..." << std::endl;
         exit(0);
     }
@@ -75,6 +80,12 @@ int main()
 
     server.Get("/api/message/inbox", handle_get_messages);
     server.Post("/api/message/send", handle_send_message);
+
+    server.Get(R"(/api/forum/post/(\d+)/comments)", handle_get_comments);
+    server.Post(R"(/api/forum/post/(\d+)/comments)", handle_post_comment);
+    server.Put(R"(/api/forum/post/(\d+)/comment/(\d+))", handle_edit_comment);
+    server.Delete(R"(/api/forum/post/(\d+)/comment/(\d+))", handle_delete_comment);
+    server.Post(R"(/api/forum/post/(\d+)/comment/(\d+)/media)", handle_upload_comment_media);
 
     std::cout << "Server running at http://0.0.0.0:8888" << std::endl;
 

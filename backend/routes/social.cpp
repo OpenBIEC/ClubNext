@@ -5,10 +5,7 @@
 
 void handle_follow_user(const httplib::Request &req, httplib::Response &res)
 {
-
-    auto user_id = req.matches[1];
     std::string username;
-
     if (!authenticate_user(req, username))
     {
         res.status = 401;
@@ -16,12 +13,20 @@ void handle_follow_user(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    User user;
+    auto user_id = req.matches[1];
 
+    User user;
     if (!user_store.get_user(user_id, user))
     {
         res.status = 404;
         res.set_content("{\"message\":\"User not found\"}", "application/json");
+        return;
+    }
+
+    if (std::ranges::find(user.following_names, user_id) == user.following_names.end())
+    {
+        res.status = 403;
+        res.set_content("{\"error\":\"Forbidden\"}", "application/json");
         return;
     }
 
@@ -34,22 +39,27 @@ void handle_follow_user(const httplib::Request &req, httplib::Response &res)
 
 void handle_unfollow_user(const httplib::Request &req, httplib::Response &res)
 {
-    auto user_id = req.matches[1];
     std::string username;
-
     if (!authenticate_user(req, username))
     {
         res.status = 401;
         res.set_content(R"({"error":"Unauthorized"})", "application/json");
         return;
     }
+    auto user_id = req.matches[1];
 
     User user;
-
     if (!user_store.get_user(user_id, user))
     {
         res.status = 404;
         res.set_content("{\"message\":\"User not found\"}", "application/json");
+        return;
+    }
+
+    if (std::ranges::find(user.following_names, user_id) != user.following_names.end())
+    {
+        res.status = 403;
+        res.set_content("{\"error\":\"Forbidden\"}", "application/json");
         return;
     }
 
@@ -62,6 +72,14 @@ void handle_unfollow_user(const httplib::Request &req, httplib::Response &res)
 
 void handle_like_post(const httplib::Request &req, httplib::Response &res)
 {
+    std::string username;
+    if (!authenticate_user(req, username))
+    {
+        res.status = 401;
+        res.set_content(R"({"error":"Unauthorized"})", "application/json");
+        return;
+    }
+
     auto post_id = std::stoi(req.matches[1]);
     Post post;
 
@@ -69,6 +87,13 @@ void handle_like_post(const httplib::Request &req, httplib::Response &res)
     {
         res.status = 404;
         res.set_content("{\"message\":\"Post not found\"}", "application/json");
+        return;
+    }
+
+    if (std::ranges::find(post.liked_by_users, username) == post.liked_by_users.end())
+    {
+        res.status = 403;
+        res.set_content("{\"error\":\"Forbidden\"}", "application/json");
         return;
     }
 
@@ -80,6 +105,14 @@ void handle_like_post(const httplib::Request &req, httplib::Response &res)
 
 void handle_unlike_post(const httplib::Request &req, httplib::Response &res)
 {
+    std::string username;
+    if (!authenticate_user(req, username))
+    {
+        res.status = 401;
+        res.set_content(R"({"error":"Unauthorized"})", "application/json");
+        return;
+    }
+
     auto post_id = std::stoi(req.matches[1]);
     Post post;
 
@@ -90,8 +123,14 @@ void handle_unlike_post(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    if (post.like_count > 0)
-        post.like_count--;
+    if (std::ranges::find(post.liked_by_users, username) != post.liked_by_users.end())
+    {
+        res.status = 403;
+        res.set_content("{\"error\":\"Forbidden\"}", "application/json");
+        return;
+    }
+
+    post.like_count--;
     post_store.save_to_file();
 
     res.set_content("{\"message\":\"Post unliked successfully\"}", "application/json");

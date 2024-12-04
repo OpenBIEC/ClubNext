@@ -6,6 +6,7 @@
 #include <string>
 #include <tbb/concurrent_hash_map.h>
 #include <tbb/concurrent_vector.h>
+#include <vector>
 
 struct Comment
 {
@@ -43,7 +44,8 @@ class CommentStore
     bool add_comment(int post_id, const Comment &comment);
     bool edit_comment(int post_id, int comment_id, const std::string &new_content);
     bool delete_comment(int post_id, int comment_id);
-    VectorType get_comments(int post_id);
+    bool get_comment(int post_id, int comment_id, Comment &comment);
+    std::vector<Comment> get_comments(int post_id);
 
     void save_to_file();
     void load_from_file();

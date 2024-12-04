@@ -122,7 +122,8 @@ void UserStore::unfollower_user(const std::string &username, const std::string &
     {
         acc->second.followers--;
         auto item = std::ranges::find(acc->second.follower_names, username);
-        *item = "";
+        if (item != acc->second.follower_names.end())
+            *item = "";
     }
 }
 
@@ -133,7 +134,8 @@ void UserStore::unfollowing_user(const std::string &username, const std::string 
     {
         acc->second.followings--;
         auto item = std::ranges::find(acc->second.following_names, username);
-        *item = "";
+        if (item != acc->second.following_names.end())
+            *item = "";
     }
 }
 

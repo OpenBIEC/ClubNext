@@ -141,6 +141,20 @@ void upload_media(const httplib::Request &req, httplib::Response &res)
     }
 
     auto file = req.get_file_value("media");
+    if (file.filename.empty())
+    {
+        res.status = 400;
+        res.set_content(R"({"error":"No file uploaded"})", "application/json");
+        return;
+    }
+
+    if (file.content.size() > Config::MAX_FILE_SIZE)
+    {
+        res.status = 400;
+        res.set_content(R"({"error":"File size exceeds limit of 20MB"})", "application/json");
+        return;
+    }
+
     std::string post_dir = post.content.substr(0, post.content.find_last_of("/\\") + 1);
     std::string media_path = post_dir + file.filename;
 

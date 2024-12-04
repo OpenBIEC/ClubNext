@@ -2,6 +2,7 @@
 #include "config.hpp"
 #include "models/authenticate.hpp"
 #include "models/message_store.hpp"
+#include "models/user_store.hpp"
 
 void handle_get_messages(const httplib::Request &req, httplib::Response &res)
 {
@@ -44,8 +45,25 @@ void handle_send_message(const httplib::Request &req, httplib::Response &res)
         res.set_content(R"({"error":"Unauthorized"})", "application/json");
         return;
     }
+
     std::string recipient_id = body["recipient_id"].get<std::string>();
     std::string content = body["content"].get<std::string>();
+
+    User user;
+    if (!user_store.get_user(recipient_id, user))
+    {
+        res.status = 404;
+        res.set_content("{\"error\":\"User not found\"}", "application/json");
+        return;
+    }
+
+    if (std::ranges::find(user.following_names, sender_id) == user.following_names.end())
+    {
+        res.status = 403;
+        res.set_content("{\"error\":\"Forbidden\"}", "application/json");
+        return;
+    }
+
     if (content.length() > Config::MAX_MESSAGE_LENGTH)
     {
         content = content.substr(0, Config::MAX_MESSAGE_LENGTH);
