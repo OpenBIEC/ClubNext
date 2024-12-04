@@ -5,7 +5,6 @@
 #include "models/session_store.hpp"
 #include "models/user_store.hpp"
 #include <nlohmann/json.hpp>
-#include <vector>
 
 using json = nlohmann::json;
 
@@ -20,8 +19,8 @@ void handle_user_register(const httplib::Request &req, httplib::Response &res)
                      body["email"].get<std::string>(),
                      "",
                      "",
-                     std::vector<std::string>(),
-                     std::vector<std::string>(),
+                     User::VectorType(),
+                     User::VectorType(),
                      0,
                      0,
                      std::time(nullptr),
@@ -90,9 +89,12 @@ void handle_user_profile(const httplib::Request &req, httplib::Response &res)
     User user;
     if (user_store.get_user(username, user))
     {
-        nlohmann::json response = {{"username", user.username},     {"bio", user.bio},
-                                   {"avatar", user.avatar_url},     {"followers", user.followers},
-                                   {"followings", user.followings}, {"joined_at", user.joined_at}};
+        nlohmann::json response = {{"username", user.username},
+                                   {"bio", user.bio},
+                                   {"avatar", user.avatar_url},
+                                   {"followers", static_cast<int>(user.followers)},
+                                   {"followings", static_cast<int>(user.followings)},
+                                   {"joined_at", user.joined_at}};
         res.status = 200;
         res.set_content(response.dump(), "application/json");
     }
@@ -210,8 +212,9 @@ void handle_user_get_profile(const httplib::Request &req, httplib::Response &res
         json response = {{"username", user.username},
                          {"bio", user.bio},
                          {"avatar", user.avatar_url},
-                         {"followers", user.followers},
-                         {"followings", user.followings}};
+                         {"followers", static_cast<int>(user.followers)},
+                         {"followings", static_cast<int>(user.followings)},
+                         {"joined_at", user.joined_at}};
         res.status = 200;
         res.set_content(response.dump(), "application/json");
     }

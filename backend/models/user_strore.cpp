@@ -120,12 +120,9 @@ void UserStore::unfollower_user(const std::string &username, const std::string &
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        auto item = std::find(acc->second.follower_names.begin(), acc->second.follower_names.end(), user_id);
-        if (item != acc->second.follower_names.end())
-        {
-            acc->second.followers--;
-            acc->second.follower_names.erase(item);
-        }
+        acc->second.followers--;
+        auto item = std::ranges::find(acc->second.follower_names, username);
+        *item = "";
     }
 }
 
@@ -134,12 +131,9 @@ void UserStore::unfollowing_user(const std::string &username, const std::string 
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        auto item = std::find(acc->second.following_names.begin(), acc->second.following_names.end(), user_id);
-        if (item != acc->second.following_names.end())
-        {
-            acc->second.followings--;
-            acc->second.following_names.erase(item);
-        }
+        acc->second.followings--;
+        auto item = std::ranges::find(acc->second.following_names, username);
+        *item = "";
     }
 }
 

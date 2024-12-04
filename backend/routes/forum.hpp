@@ -5,6 +5,7 @@
 
 void get_post_detail(const httplib::Request &req, httplib::Response &res);
 void create_post(const httplib::Request &req, httplib::Response &res);
+void modify_post(const httplib::Request &req, httplib::Response &res);
 void upload_media(const httplib::Request &req, httplib::Response &res);
 void get_recommend_posts(const httplib::Request &req, httplib::Response &res);
 void get_tags(const httplib::Request &req, httplib::Response &res);

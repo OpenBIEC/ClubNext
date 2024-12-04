@@ -46,6 +46,17 @@ bool PostStore::get_post(int id, Post &post)
     return false;
 }
 
+bool PostStore::set_post(int id, const Post &post)
+{
+    MapType::accessor acc;
+    if (posts.find(acc, id))
+    {
+        acc->second = post;
+        return true;
+    }
+    return false;
+}
+
 void PostStore::save_to_file()
 {
     try

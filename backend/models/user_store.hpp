@@ -6,64 +6,115 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <tbb/concurrent_hash_map.h>
+#include <tbb/concurrent_vector.h>
 #include <thread>
-#include <vector>
 
 struct User
 {
+    using VectorType = tbb::concurrent_vector<std::string>;
+
     std::string username;
     std::string password;
     std::string email;
     std::string bio;
     std::string avatar_url;
-    std::vector<std::string> follower_names;
-    std::vector<std::string> following_names;
-    int followers;
-    int followings;
+    VectorType follower_names;
+    VectorType following_names;
+    std::atomic<int> followers;
+    std::atomic<int> followings;
     std::time_t joined_at;
     bool is_active;
     std::string active_code;
 
+    User() : followers(0), followings(0), joined_at(std::time(nullptr)), is_active(false)
+    {
+    }
+
+    User(const std::string &uname, const std::string &pwd, const std::string &mail, const std::string &bio_text,
+         const std::string &avatar, const VectorType &followers_list, const VectorType &following_list,
+         int follower_count, int following_count, std::time_t join_time, bool active_status,
+         const std::string &activation_code = "")
+        : username(uname), password(pwd), email(mail), bio(bio_text), avatar_url(avatar),
+          follower_names(followers_list), following_names(following_list), followers(follower_count),
+          followings(following_count), joined_at(join_time), is_active(active_status), active_code(activation_code)
+    {
+    }
+
+    User(const User &other)
+        : username(other.username), password(other.password), email(other.email), bio(other.bio),
+          avatar_url(other.avatar_url), follower_names(other.follower_names), following_names(other.following_names),
+          followers(other.followers.load()), followings(other.followings.load()), joined_at(other.joined_at),
+          is_active(other.is_active), active_code(other.active_code)
+    {
+    }
+
+    User &operator=(const User &other)
+    {
+        if (this == &other)
+            return *this;
+
+        username = other.username;
+        password = other.password;
+        email = other.email;
+        bio = other.bio;
+        avatar_url = other.avatar_url;
+        follower_names = other.follower_names;
+        following_names = other.following_names;
+
+        followers.store(other.followers.load());
+        followings.store(other.followings.load());
+
+        joined_at = other.joined_at;
+        is_active = other.is_active;
+        active_code = other.active_code;
+
+        return *this;
+    }
+
     nlohmann::json to_json() const
     {
-        nlohmann::json follower_name(follower_names);
-        nlohmann::json following_name(following_names);
+        std::vector<std::string> follower_name_list(follower_names.begin(), follower_names.end());
+        std::vector<std::string> following_name_list(following_names.begin(), following_names.end());
+
         return {{"username", username},
                 {"password", password},
                 {"email", email},
                 {"bio", bio},
                 {"avatar_url", avatar_url},
-                {"follower_names", follower_name},
-                {"following_names", following_name},
-                {"followers", followers},
-                {"followings", followings},
+                {"follower_names", follower_name_list},
+                {"following_names", following_name_list},
+                {"followers", followers.load()},
+                {"followings", followings.load()},
                 {"joined_at", joined_at},
-                {"is_active", is_active}};
+                {"is_active", is_active},
+                {"active_code", active_code}};
     }
 
     static User from_json(const nlohmann::json &j)
     {
-        std::vector<std::string> follower_names;
-        for (auto &item : j["follower_names"])
+        User user;
+        user.username = j["username"].get<std::string>();
+        user.password = j["password"].get<std::string>();
+        user.email = j["email"].get<std::string>();
+        user.bio = j["bio"].get<std::string>();
+        user.avatar_url = j["avatar_url"].get<std::string>();
+
+        for (const auto &item : j["follower_names"])
         {
-            follower_names.push_back(item.get<std::string>());
+            user.follower_names.push_back(item.get<std::string>());
         }
-        std::vector<std::string> following_names;
-        for (auto &item : j["following_names"])
+        for (const auto &item : j["following_names"])
         {
-            following_names.push_back(item.get<std::string>());
+            user.following_names.push_back(item.get<std::string>());
         }
-        return {j["username"].get<std::string>(),
-                j["password"].get<std::string>(),
-                j["email"].get<std::string>(),
-                j["bio"].get<std::string>(),
-                j["avatar_url"].get<std::string>(),
-                follower_names,
-                following_names,
-                j["followers"].get<int>(),
-                j["followings"].get<int>(),
-                j["joined_at"].get<std::time_t>(),
-                j["is_active"].get<bool>()};
+
+        user.followers.store(j["followers"].get<int>());
+        user.followings.store(j["followings"].get<int>());
+        user.joined_at = j["joined_at"].get<std::time_t>();
+        user.is_active = j["is_active"].get<bool>();
+        user.active_code = j["active_code"].get<std::string>();
+
+        return user;
     }
 };
 

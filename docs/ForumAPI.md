@@ -220,7 +220,7 @@
   ```json
   {
     "id": "int",
-    "author_id": "int",
+    "author": "string",
     "content": "string",
     "media": ["url"],
     "like_count": "int",
@@ -256,7 +256,32 @@
 
 ---
 
-### 3. **上传帖子媒体**
+### 3. **修改帖子**
+
+- **方法**: `POST`
+- **路径**: `/api/forum/post/{post_id}`
+- **描述**: 创建新帖子。
+- **请求体**:
+
+  ```json
+  {
+    "title": "string",
+    "content": "string"
+  }
+  ```
+
+- **响应**:
+
+  ```json
+  {
+    "message": "Post created successfully",
+    "post_id": "int"
+  }
+  ```
+
+---
+
+### 4. **上传帖子媒体**
 
 - **方法**: `POST`
 - **路径**: `/api/forum/post/{post_id}/media`
@@ -274,7 +299,7 @@
 
 ---
 
-### 4. **获取推荐帖子**
+### 5. **获取推荐帖子**
 
 - **方法**: `GET`
 - **路径**: `/api/forum/recommend`
@@ -387,7 +412,7 @@
   {
     "messages": [
       {
-        "sender_id": "int",
+        "sender_id": "string",
         "content": "string",
         "timestamp": "datetime"
       },
@@ -407,7 +432,7 @@
 
   ```json
   {
-    "recipient_id": "int",
+    "recipient_id": "string",
     "content": "string"
   }
   ```
@@ -479,5 +504,112 @@
   ```json
   {
     "message": "Post unliked successfully"
+  }
+  ```
+
+---
+
+## **评论功能 API**
+
+### 1. **获取帖子评论列表**
+
+- **方法**: `GET`
+- **路径**: `/api/forum/post/{post_id}/comments`
+- **描述**: 获取指定帖子的评论列表。
+- **响应**:
+
+  ```json
+  {
+    "post_id": "int",
+    "comments": [
+      {
+        "comment_id": "int",
+        "author": "string",
+        "content": "string",
+        "timestamp": "datetime"
+      },
+      ...
+    ]
+  }
+  ```
+
+---
+
+### 2. **发布评论**
+
+- **方法**: `POST`
+- **路径**: `/api/forum/post/{post_id}/comments`
+- **描述**: 在指定帖子下发布评论。
+- **请求体**:
+
+  ```json
+  {
+    "author": "string",
+    "content": "string"
+  }
+  ```
+
+- **响应**:
+
+  ```json
+  {
+    "message": "Comment posted successfully",
+    "comment_id": "int"
+  }
+  ```
+
+---
+
+### 3. **编辑评论**
+
+- **方法**: `PUT`
+- **路径**: `/api/forum/post/{post_id}/comment/{comment_id}`
+- **描述**: 编辑已发布的评论。
+- **请求体**:
+
+  ```json
+  {
+    "content": "string"
+  }
+  ```
+
+- **响应**:
+
+  ```json
+  {
+    "message": "Comment updated successfully"
+  }
+  ```
+
+---
+
+### 4. **删除评论**
+
+- **方法**: `DELETE`
+- **路径**: `/api/forum/post/{post_id}/comment/{comment_id}`
+- **描述**: 删除指定评论。
+- **响应**:
+
+  ```json
+  {
+    "message": "Comment deleted successfully"
+  }
+  ```
+
+---
+
+### 5. **上传帖子媒体**
+
+- **方法**: `POST`
+- **路径**: `/api/forum/post/{post_id}/comment/{comment_id}/media`
+- **描述**: 上传指定帖子的指定评论的媒体文件。
+- **请求体**:
+  - `Content-Type`: `multipart/form-data`
+  - 文件字段名: `media`
+- **响应**:
+
+  ```json
+  {
+    "message": "Media uploaded successfully"
   }
   ```

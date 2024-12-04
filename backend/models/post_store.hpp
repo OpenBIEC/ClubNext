@@ -6,51 +6,89 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <tbb/concurrent_hash_map.h>
+#include <tbb/concurrent_vector.h>
 #include <thread>
 #include <vector>
 
 // 定义 Post 结构体
 struct Post
 {
+    using VectorType = tbb::concurrent_vector<std::string>;
+
     int id;
-    int author_id;
+    std::string author;
     std::string content;
     std::vector<std::string> media;
     std::vector<int> tags;
-    int like_count;
-    std::vector<int> liked_by_users;
-    int comment_count;
+    std::atomic<int> like_count;
+    VectorType liked_by_users;
+    std::atomic<int> comment_count;
     std::time_t created_at;
 
     Post() = default;
-    Post(int postId, int authorId, const std::string &postContent)
-        : id(postId), author_id(authorId), content(postContent), like_count(0), comment_count(0)
+    Post(int postId, std::string authorId, const std::string &postContent)
+        : id(postId), author(authorId), content(postContent), like_count(0), comment_count(0)
     {
-        created_at = std::time(nullptr); // 记录创建时间
+        created_at = std::time(nullptr);
+    }
+
+    Post(const Post &other)
+        : id(other.id), author(other.author), content(other.content), media(other.media), tags(other.tags),
+          like_count(other.like_count.load()), liked_by_users(other.liked_by_users),
+          comment_count(other.comment_count.load()), created_at(other.created_at)
+    {
+    }
+
+    Post &operator=(const Post &other)
+    {
+        if (this == &other)
+            return *this;
+
+        id = other.id;
+        author = other.author;
+        content = other.content;
+        media = other.media;
+        tags = other.tags;
+
+        like_count.store(other.like_count.load());
+        comment_count.store(other.comment_count.load());
+
+        liked_by_users = other.liked_by_users;
+
+        created_at = other.created_at;
+
+        return *this;
     }
 
     nlohmann::json to_json() const
     {
+        std::vector<std::string> liked_by_users_vector(liked_by_users.begin(), liked_by_users.end());
+
         return {{"id", id},
-                {"author_id", author_id},
+                {"author", author},
                 {"content", content},
                 {"media", media},
                 {"tags", tags},
-                {"like_count", like_count},
-                {"liked_by_users", liked_by_users},
-                {"comment_count", comment_count},
+                {"like_count", like_count.load()},
+                {"liked_by_users", liked_by_users_vector},
+                {"comment_count", comment_count.load()},
                 {"created_at", created_at}};
     }
 
     static Post from_json(const nlohmann::json &j)
     {
-        Post post(j["id"].get<int>(), j["author_id"].get<int>(), j["content"].get<std::string>());
+        Post post(j["id"].get<int>(), j["author"].get<std::string>(), j["content"].get<std::string>());
         post.media = j["media"].get<std::vector<std::string>>();
         post.tags = j["tags"].get<std::vector<int>>();
-        post.like_count = j["like_count"].get<int>();
-        post.liked_by_users = j["liked_by_users"].get<std::vector<int>>();
-        post.comment_count = j["comment_count"].get<int>();
+        post.like_count.store(j["like_count"].get<int>());
+        post.comment_count.store(j["comment_count"].get<int>());
         post.created_at = j["created_at"].get<std::time_t>();
+
+        for (auto &item : j["liked_by_users"].get<std::vector<std::string>>())
+        {
+            post.liked_by_users.push_back(item);
+        }
+
         return post;
     }
 };
@@ -66,6 +104,7 @@ class PostStore
 
     bool add_post(const Post &post);
     bool get_post(int id, Post &post);
+    bool set_post(int id, const Post &post);
     void save_to_file();
 
     MapType &get_posts();

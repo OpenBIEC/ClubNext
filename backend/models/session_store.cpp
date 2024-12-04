@@ -1,5 +1,4 @@
 #include "models/session_store.hpp"
-#include <cstdio>
 #include <random>
 
 std::string SessionStore::generate_token() const
