@@ -23,20 +23,20 @@ struct User
     std::atomic<int> followers;
     std::atomic<int> followings;
     std::time_t joined_at;
-    bool is_active;
+    int user_mode;
     std::string active_code;
 
-    User() : followers(0), followings(0), joined_at(std::time(nullptr)), is_active(false)
+    User() : followers(0), followings(0), joined_at(std::time(nullptr)), user_mode(0)
     {
     }
 
     User(const std::string &uname, const std::string &pwd, const std::string &mail, const std::string &bio_text,
          const std::string &avatar, const VectorType &followers_list, const VectorType &following_list,
-         int follower_count, int following_count, std::time_t join_time, bool active_status,
+         int follower_count, int following_count, std::time_t join_time, int usermode,
          const std::string &activation_code = "")
         : username(uname), password(pwd), email(mail), bio(bio_text), avatar_url(avatar),
           follower_names(followers_list), following_names(following_list), followers(follower_count),
-          followings(following_count), joined_at(join_time), is_active(active_status), active_code(activation_code)
+          followings(following_count), joined_at(join_time), user_mode(usermode), active_code(activation_code)
     {
     }
 
@@ -44,7 +44,7 @@ struct User
         : username(other.username), password(other.password), email(other.email), bio(other.bio),
           avatar_url(other.avatar_url), follower_names(other.follower_names), following_names(other.following_names),
           followers(other.followers.load()), followings(other.followings.load()), joined_at(other.joined_at),
-          is_active(other.is_active), active_code(other.active_code)
+          user_mode(other.user_mode), active_code(other.active_code)
     {
     }
 
@@ -65,7 +65,7 @@ struct User
         followings.store(other.followings.load());
 
         joined_at = other.joined_at;
-        is_active = other.is_active;
+        user_mode = other.user_mode;
         active_code = other.active_code;
 
         return *this;
@@ -86,8 +86,7 @@ struct User
                 {"followers", followers.load()},
                 {"followings", followings.load()},
                 {"joined_at", joined_at},
-                {"is_active", is_active},
-                {"active_code", active_code}};
+                {"user_mode", user_mode}};
     }
 
     static User from_json(const nlohmann::json &j)
@@ -111,8 +110,7 @@ struct User
         user.followers.store(j["followers"].get<int>());
         user.followings.store(j["followings"].get<int>());
         user.joined_at = j["joined_at"].get<std::time_t>();
-        user.is_active = j["is_active"].get<bool>();
-        user.active_code = j["active_code"].get<std::string>();
+        user.user_mode = j["user_mode"].get<bool>();
 
         return user;
     }

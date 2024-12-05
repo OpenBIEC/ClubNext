@@ -111,15 +111,8 @@
 
   ```json
   {
-    "message": "Profile updated successfully"
-  }
-  ```
-
-- **失败**:
-
-  ```json
-  {
-    "error": "User not found"
+    "message": "Profile updated successfully",
+    "token": "<TOKEN>"
   }
   ```
 
@@ -173,6 +166,7 @@
 
 | 参数名   | 类型     | 是否必填 | 描述             |
 |----------|----------|----------|------------------|
+| `username`  | `string` | 必填     | 用户名。 |
 | `email`  | `string` | 必填     | 用户接收验证码的邮箱地址。 |
 
 - **响应**
@@ -195,7 +189,7 @@
 
 | 参数名   | 类型     | 是否必填 | 描述                  |
 |----------|----------|----------|-----------------------|
-| `email`  | `string` | 必填     | 用户接收验证码的邮箱地址。 |
+| `username`  | `string` | 必填     | 用户名。 |
 | `code`   | `string` | 必填     | 用户输入的验证码。      |
 
 - **响应**

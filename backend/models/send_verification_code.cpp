@@ -86,6 +86,7 @@ bool send_verification_code(const std::string &to_email, const std::string &code
         "</html>";
 
     CURL *curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_PROXY, "");
     if (curl)
     {
         struct curl_slist *recipients = nullptr;

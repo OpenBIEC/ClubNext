@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <title>Sign In Page</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            background-image: url('https://placehold.co/1920x1080'); /* Replace resolution as needed */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .info-box, .login-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .info-box h3 {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .forum-post {
+            background: rgba(240, 240, 240, 0.9);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn-lg {
+            font-size: 1.2rem;
+            padding: 0.75rem;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Information Box -->
+        <div class="info-box">
+            <h3>Forum Updates</h3>
+            <div id="forumContent">
+                <div class="forum-post">
+                    <h5>Upcoming Software/Feature Updates!</h5>
+                    <p class="text-muted">2024-11-30 15:55</p>
+                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                </div>
+                <div class="forum-post">
+                    <h5>Vote for the 2024 System Mirror!</h5>
+                    <p class="text-muted">2024-11-30 15:44</p>
+                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                </div>
+                <div class="forum-post">
+                    <h5>New Object Storage Discounts Launched!</h5>
+                    <p class="text-muted">2024-11-01 20:02</p>
+                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Box -->
+        <div class="login-box">
+            <h3 class="text-center mb-3">Welcome Back</h3>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="remember">
+                    <label class="form-check-label" for="remember">Remember me for 7 days</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-lg">Sign In</button>
+                <a href="/register.html" class="btn btn-success w-100 btn-lg mt-2">Sign Up</a>
+            </form>
+            <div class="text-center mt-3">
+                <p class="mb-1"><a href="#" class="text-primary">Forgot Password?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="mb-0">© 2024 OpenBIEC. All rights reserved.</p>
+        <p class="text-muted">Powered by a lightweight C++ backend and Bootstrap frontend. Visit our <a href="https://github.com/OpenBIEC/ClubNext" target="_blank">GitHub</a> for source code.</p>
+    </footer>
+
+    <script>
+        // Login form logic
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Sign In successful!');
+                    window.location.href = 'index.html';
+                } else {
+                    alert(data.error || 'Sign In failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

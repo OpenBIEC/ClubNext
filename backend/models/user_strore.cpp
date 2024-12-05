@@ -32,7 +32,7 @@ bool UserStore::is_active_user(const std::string &username, const std::string co
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        if (acc->second.is_active)
+        if (acc->second.user_mode)
         {
             acc->second.active_code = code;
         }
@@ -45,7 +45,7 @@ bool UserStore::active_user(const std::string &username, const std::string code)
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        if (acc->second.is_active || acc->second.active_code.empty())
+        if (acc->second.user_mode || acc->second.active_code.empty())
         {
             return false;
         }

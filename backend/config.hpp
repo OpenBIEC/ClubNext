@@ -8,9 +8,9 @@ namespace Config
 {
 const std::string BASE_URL = "http://example.com";
 
-const std::string STATIC_DIR = "/././././frontend/";
-const std::string USER_DIR = "/users/";
-const std::string POST_DIR = "/posts/";
+const std::string STATIC_DIR = "./../../../../frontend/";
+const std::string USER_DIR = "./users/";
+const std::string POST_DIR = "./posts/";
 const std::string COMMENT_DIR = "COMMENT_DIR";
 
 const std::string VERIFY_EMAIL = "tabverify@163.com";

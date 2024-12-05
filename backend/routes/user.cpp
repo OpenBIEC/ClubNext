@@ -60,6 +60,7 @@ void handle_user_login(const httplib::Request &req, httplib::Response &res)
             std::string token = session_store.create_session(username);
 
             res.status = 200;
+            res.set_header("Set-Cookie", "sessionid=" + token + "; Path=/; HttpOnly; Secure");
             res.set_content(nlohmann::json({{"message", "Login successful"}, {"token", token}}).dump(),
                             "application/json");
         }
@@ -244,21 +245,6 @@ void handle_user_get_profile(const httplib::Request &req, httplib::Response &res
     }
 }
 
-std::string generate_verification_code(size_t length = 6)
-{
-    const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_int_distribution<size_t> distribution(0, sizeof(charset) - 2);
-
-    std::string code;
-    for (size_t i = 0; i < length; ++i)
-    {
-        code += charset[distribution(generator)];
-    }
-    return code;
-}
-
 void send_verify_email(const httplib::Request &req, httplib::Response &res)
 {
     if (!req.has_param("username"))
@@ -301,11 +287,13 @@ void verify_user_email(const httplib::Request &req, httplib::Response &res)
     std::string username = req.get_param_value("username");
     std::string code = req.get_param_value("code");
 
-    std::string stored_code;
-    if (!user_store.active_user(username, stored_code))
+    if (!user_store.active_user(username, code))
     {
         res.status = 401;
         res.set_content("{\"error\":\"Invalid verification code\"}", "application/json");
         return;
     }
+
+    res.status = 200;
+    res.set_content("{\"error\":\"Verification successful\"}", "application/json");
 }
