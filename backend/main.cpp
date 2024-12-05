@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include "models/comment_store.hpp"
 #include "models/message_store.hpp"
 #include "models/post_store.hpp"
@@ -14,7 +15,6 @@
 #include <httplib.h>
 #include <iostream>
 #include <thread>
-
 
 SessionStore session_store;
 
@@ -56,6 +56,8 @@ int main()
     cleanup_thread.detach();
 
     httplib::Server server;
+
+    server.set_mount_point("/", Config::STATIC_DIR);
 
     server.Post("/api/user/register", handle_user_register);
     server.Post("/api/user/login", handle_user_login);

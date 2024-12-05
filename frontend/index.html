@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index Page - Twitter-like Layout with Carousel</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/markdown.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/markdown.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
@@ -48,17 +48,17 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="./profile.html">
+                        <a class="nav-link" href="/profile.html">
                             <i class="bi bi-person-circle"></i> Profile
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./private_message.html">
+                        <a class="nav-link" href="/private_message.html">
                             <i class="bi bi-chat-dots"></i> Messages
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./drafts.html">
+                        <a class="nav-link" href="/drafts.html">
                             <i class="bi bi-file-earmark-text"></i> Drafts
                         </a>
                     </li>
@@ -128,11 +128,11 @@
                         <p class="text-muted"><small id="userJoinedDate">Joined: January 1, 2024</small></p>
                         <p class="card-text" id="userProfileText">Welcome back, user123!</p>
                         <div class="d-grid gap-2">
-                            <a href="./private_message.html" id="viewMessagesButton" class="btn btn-outline-success position-relative">
+                            <a href="/private_message.html" id="viewMessagesButton" class="btn btn-outline-success position-relative">
                                 <i class="bi bi-chat"></i> View Messages
                                 <span id="messageNotification" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">!</span>
                             </a>
-                            <a href="./profile.html" id="viewProfileButton" class="btn btn-outline-primary">
+                            <a href="/profile.html" id="viewProfileButton" class="btn btn-outline-primary">
                                 <i class="bi bi-person"></i> View Profile
                             </a>
                         </div>
@@ -143,7 +143,7 @@
                     <div class="card-body">
                         <h5 class="card-title" id="userProfileTitle">User Profile</h5>
                         <p class="card-text" id="userLoginText">Please log in to see your profile.</p>
-                        <a href="./login.html" id="loginButton" class="btn btn-primary">Log In</a>
+                        <a href="/login.html" id="loginButton" class="btn btn-primary">Log In</a>
                     </div>
                 </div>
             </div>
@@ -152,17 +152,28 @@
                     <div class="mb-3">
                         <div class="card">
                             <div class="card-body d-flex">
-                                <img src="https://placeholder.co/50" alt="User Avatar" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                <img id="userAvatar" src="https://placeholder.co/50" alt="User Avatar" class="rounded-circle me-3" style="width: 50px; height: 50px;">
                                 <div class="w-100">
                                     <textarea class="form-control mb-2" id="postContent" rows="3" placeholder="What's happening?"></textarea>
                                     <div id="imagePreview" class="mb-2" style="display: none;">
                                         <img id="previewImage" src="" alt="Preview" class="img-fluid rounded" style="max-height: 200px;">
                                     </div>
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-start flex-wrap gap-2">
                                         <label for="imageUpload" class="btn btn-outline-primary">
-                                            <i class="bi bi-image"></i> Add Image
+                                            <i class="bi bi-image"></i> Image
                                             <input type="file" id="imageUpload" class="d-none" accept="image/*">
                                         </label>
+                                        <label for="fileUpload" class="btn btn-outline-secondary">
+                                            <i class="bi bi-file-earmark"></i> File
+                                            <input type="file" id="fileUpload" class="d-none">
+                                        </label>
+                                        <label for="videoUpload" class="btn btn-outline-danger">
+                                            <i class="bi bi-camera-video"></i> Video
+                                            <input type="file" id="videoUpload" class="d-none" accept="video/*">
+                                        </label>
+                                        <button id="addLinkButton" class="btn btn-outline-info">
+                                            <i class="bi bi-link-45deg"></i> Link
+                                        </button>
                                         <button id="postButton" class="btn btn-primary">
                                             <i class="bi bi-send"></i> Post
                                         </button>
@@ -171,6 +182,7 @@
                             </div>
                         </div>
                     </div>
+                                    
                     
                 </div>
                 <div id="loadingIndicator" class="text-center mt-3">
@@ -184,37 +196,37 @@
                         <h5 class="card-title">Trending Topics</h5>
                         <ul class="list-unstyled mb-4">
                             <li class="d-flex align-items-center mb-2">
-                                <a href="./official.html" class="text-decoration-none d-flex align-items-center">
+                                <a href="/official.html" class="text-decoration-none d-flex align-items-center">
                                     <i class="bi bi-megaphone-fill text-danger me-2"></i>
                                     <span>论坛官方</span>
                                 </a>
                             </li>
                             <li class="d-flex align-items-center mb-2">
-                                <a href="./biec_community.html" class="text-decoration-none d-flex align-items-center">
+                                <a href="/biec_community.html" class="text-decoration-none d-flex align-items-center">
                                     <i class="bi bi-building text-primary me-2"></i>
                                     <span>BIEC社团</span>
                                 </a>
                             </li>
                             <li class="d-flex align-items-center mb-2">
-                                <a href="./gamehub.html" class="text-decoration-none d-flex align-items-center">
+                                <a href="/gamehub.html" class="text-decoration-none d-flex align-items-center">
                                     <i class="bi bi-controller text-warning me-2"></i>
                                     <span>GameHub</span>
                                 </a>
                             </li>
                             <li class="d-flex align-items-center mb-2">
-                                <a href="./onlystudies.html" class="text-decoration-none d-flex align-items-center">
+                                <a href="/onlystudies.html" class="text-decoration-none d-flex align-items-center">
                                     <i class="bi bi-pencil-fill text-info me-2"></i>
                                     <span>Only Study</span>
                                 </a>
                             </li>
                             <li class="d-flex align-items-center">
-                                <a href="./life.html" class="text-decoration-none d-flex align-items-center">
+                                <a href="/life.html" class="text-decoration-none d-flex align-items-center">
                                     <i class="bi bi-house-heart-fill text-primary me-2"></i>
                                     <span>Life</span>
                                 </a>
                             </li>
                         </ul>
-                        <div class="tags-container mb-3">
+                        <div id="tagsSuggestion" class="tags-container mb-3">
                             <span class="badge bg-primary">Technology</span>
                             <span class="badge bg-success">Science</span>
                             <span class="badge bg-warning text-dark">Health</span>
@@ -223,7 +235,7 @@
                             <span class="badge bg-danger">Sports</span>
                         </div>
                         <a href="#" class="btn btn-outline-primary w-100 mb-3">Explore</a>
-                        <a href="./create_post.html" class="btn btn-success w-100">
+                        <a href="/create_post.html" class="btn btn-success w-100">
                             <i class="bi bi-plus-circle"></i> Create Post
                         </a>
                     </div>
@@ -240,29 +252,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="/js/api/user.js"></script>
+    <script src="/js/api/post.js"></script>
+    <script src="/js/api/social.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () { 
-            let userLoggedIn = true;
-        
-            function fetchUserProfile() {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve({
-                            username: "user123",
-                            avatar: "https://placehold.co/150",
-                            bio: "Passionate developer and tech enthusiast.",
-                            followers: 200,
-                            following: 180,
-                            joinedDate: "January 1, 2024"
-                        });
-                    }, 500);
-                });
-            }
-        
+        document.addEventListener("DOMContentLoaded", function () {
             function fetchUnreadMessages() {
                 return new Promise((resolve) => {
                     setTimeout(() => {
-                        resolve({ hasUnread: true }); // 模拟有未读消息
+                        resolve({ hasUnread: true });
                     }, 300);
                 });
             }
@@ -286,134 +284,206 @@
                 }
             }
         
-            if (userLoggedIn) {
-                document.getElementById("userLoginProfileCard").classList.add("d-none");
-                document.getElementById("userViewProfileCard").classList.remove("d-none");
+            isUserLoggedIn().then((loggedIn) => {
+                if (loggedIn) {
+                    document.getElementById("userLoginProfileCard").classList.add("d-none");
+                    document.getElementById("userViewProfileCard").classList.remove("d-none");
         
-                fetchUserProfile().then((profile) => {
-                    updateUserProfile(profile);
-                });
+                    fetchUserProfile().then((profile) => {
+                        if (profile) {
+                            updateUserProfile(profile);
+                        }
+                    });
         
-                fetchUnreadMessages().then((data) => {
-                    updateMessageNotification(data.hasUnread);
-                });
-            } else {
-                document.getElementById("userLoginProfileCard").classList.remove("d-none");
-                document.getElementById("userViewProfileCard").classList.add("d-none");
-                document.getElementById("userLoginText").textContent = "Please log in to see your profile.";
-            }
-        });        
+                    fetchUnreadMessages().then((data) => {
+                        updateMessageNotification(data.hasUnread);
+                    });
+                } else {
+                    document.getElementById("userLoginProfileCard").classList.remove("d-none");
+                    document.getElementById("userViewProfileCard").classList.add("d-none");
+                    document.getElementById("userLoginText").textContent = "Please log in to see your profile.";
+                }
+            });
+        });            
 
         document.addEventListener("DOMContentLoaded", () => {
             const postList = document.getElementById("postList");
             const loadingIndicator = document.getElementById("loadingIndicator");
             let isLoading = false;
         
-            let totalAvailablePosts = 50;
-            const fetchPostsFromAPI = (limit = 5) => {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        if (totalAvailablePosts <= 0) {
-                            resolve([]);
-                            return;
-                        }
-                        const postsToGenerate = Math.min(limit, totalAvailablePosts);
-                        const newPosts = [];
-                        for (let i = 0; i < postsToGenerate; i++) {
-                            const postId = Date.now() + Math.random();
-                            newPosts.push({
-                                id: postId,
-                                username: `user${Math.floor(Math.random() * 100)}`,
-                                content: `### Post by user${Math.floor(Math.random() * 100)}\nThis is a dynamically loaded post.\n\n![image](https://placehold.co/114x514)\n\n`,
-                                avatar: "https://placehold.co/50",
-                                likes: Math.floor(Math.random() * 100),
-                                comments: Math.floor(Math.random() * 50),
-                                likedByUser: Math.random() > 0.5
-                            });
-                        }
-                        totalAvailablePosts -= postsToGenerate;
-                        resolve(newPosts);
-                    }, 500);
-                });
-            };            
-        
-            const generatePostHTML = ({ id, username, content, avatar, likes, comments, likedByUser }) => `
-                <div class="mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-2">
-                                <img src="${avatar}" alt="${username}'s Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
-                                <h6 class="card-subtitle mb-0 text-muted">@${username}</h6>
-                            </div>
-                            <div class="card-text markdown-content">${marked.parse(content)}</div>
-                            <div class="d-flex mt-3">
-                                <button class="btn me-2 like-button ${likedByUser ? "text-danger" : "text-muted"}" data-id="${id}">
-                                    <i class="bi ${likedByUser ? "bi-heart-fill" : "bi-heart"}"></i> ${likes}
-                                </button>
-                                <button class="btn comment-button text-muted" data-id="${id}">
-                                    <i class="bi bi-chat"></i> ${comments}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        
-            const loadMorePosts = async () => {
-                if (isLoading) return;
-                isLoading = true;
-                loadingIndicator.style.display = "block";
-        
-                const newPosts = await fetchPostsFromAPI(5); // 每次请求 5 条新帖子
-                if (newPosts.length === 0) {
-                    loadingIndicator.style.display = "none";
-                    observer.disconnect(); // 停止观察
-                    return;
-                }
-        
-                newPosts.forEach((post) => {
-                    postList.insertAdjacentHTML("beforeend", generatePostHTML(post));
-                });
-        
-                isLoading = false;
-                loadingIndicator.style.display = "block";
-                observer.observe(loadingIndicator); // 重新观察
-            };
-        
-            const handlePostInteraction = (event) => {
-                const button = event.target.closest("button");
-                if (!button) return;
-        
-                const postId = button.dataset.id;
-        
-                if (button.classList.contains("like-button")) {
-                    const icon = button.querySelector("i");
-                    const likeCount = parseInt(button.textContent.trim(), 10);
-                    const isLiked = button.classList.contains("text-danger");
-        
-                    button.classList.toggle("text-danger", !isLiked);
-                    button.classList.toggle("text-muted", isLiked);
-                    icon.classList.toggle("bi-heart-fill", !isLiked);
-                    icon.classList.toggle("bi-heart", isLiked);
-                    button.innerHTML = `<i class="bi ${!isLiked ? "bi-heart-fill" : "bi-heart"}"></i> ${isLiked ? likeCount - 1 : likeCount + 1}`;
-                }
-        
-                if (button.classList.contains("comment-button")) {
-                    alert(`View comments for post ID: ${postId}`);
-                }
-            };
-        
-            postList.addEventListener("click", handlePostInteraction);
-        
-            const observer = new IntersectionObserver((entries) => {
+            const observer = new IntersectionObserver(async (entries) => {
                 if (entries[0].isIntersecting && !isLoading) {
-                    loadMorePosts();
-                    observer.unobserve(loadingIndicator);
+                    isLoading = true;
+                    const shouldContinue = await loadMorePosts(postList, loadingIndicator);
+                    isLoading = false;
+        
+                    if (!shouldContinue) {
+                        observer.disconnect();
+                    }
                 }
             });
         
             observer.observe(loadingIndicator);
-        });        
+        
+            postList.addEventListener("click", async (event) => {
+                const button = event.target.closest("button");
+                if (!button) return;
+
+                const postId = button.dataset.id;
+
+                if (button.classList.contains("like-button")) {
+                    const icon = button.querySelector("i");
+                    const likeCountElement = button.querySelector('span');
+                    const likeCount = parseInt(likeCountElement.textContent.trim(), 10);
+                    const isLiked = button.classList.contains("text-danger");
+
+                    try {
+                        let updatedCount;
+                        if (!isLiked) {
+                            const response = await likePost(postId);
+                            updatedCount = response.like_count;
+                        } else {
+                            const response = await unlikePost(postId);
+                            updatedCount = response.like_count;
+                        }
+
+                        button.classList.toggle("text-danger", !isLiked);
+                        button.classList.toggle("text-muted", isLiked);
+                        icon.classList.toggle("bi-heart-fill", !isLiked);
+                        icon.classList.toggle("bi-heart", isLiked);
+                        likeCountElement.textContent = updatedCount;
+                    } catch (error) {
+                        alert(`Failed to ${isLiked ? "unlike" : "like"} the post. Please try again.`);
+                    }
+                }
+
+                if (button.classList.contains("comment-button")) {
+                    alert(`View comments for post ID: ${postId}`);
+                }
+            });
+        });
+        
+        document.addEventListener("DOMContentLoaded", async () => {
+            const tagsContainer = document.getElementById("tagsSuggestion");
+
+            try {
+                const data = await fetchTags();
+                const tags = data.tags;
+
+                tagsContainer.innerHTML = '';
+
+                tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'badge';
+                    tagElement.textContent = tag.name;
+
+                    const colors = [
+                        'bg-primary', 'bg-success', 'bg-warning text-dark',
+                        'bg-info text-dark', 'bg-secondary', 'bg-danger'
+                    ];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    tagElement.classList.add(...randomColor.split(' '));
+
+                    tagsContainer.appendChild(tagElement);
+                });
+            } catch (error) {
+                console.error('Failed to update tags:', error);
+                tagsContainer.innerHTML = '<span class="text-danger">Failed to load tags.</span>';
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const userAvatar = document.getElementById("userAvatar");
+            const postContent = document.getElementById("postContent");
+            const imageUpload = document.getElementById("imageUpload");
+            const fileUpload = document.getElementById("fileUpload");
+            const videoUpload = document.getElementById("videoUpload");
+            const postButton = document.getElementById("postButton");
+        
+            let userLoggedIn = false;
+            let currentPostId = null;
+        
+            try {
+                const profile = await fetchUserProfile();
+                if (profile && profile.avatar) {
+                    userLoggedIn = true;
+                    userAvatar.src = profile.avatar;
+                }
+            } catch (error) {
+                console.warn("User not logged in:", error);
+                alert("You need to log in to create or edit posts.");
+                return;
+            }
+        
+            async function createSamplePost(content) {
+                if (!userLoggedIn) {
+                    alert("You need to log in to create a post.");
+                    return null;
+                }
+                try {
+                    const response = await createPost(content || "Temporary post content.");
+                    currentPostId = response.post_id;
+                    return response;
+                } catch (error) {
+                    console.error("Error creating sample post:", error);
+                    alert("Failed to create a sample post. Please try again.");
+                    return null;
+                }
+            }
+        
+            async function handleMediaUpload(file, type) {
+                if (!currentPostId) {
+                    await createSamplePost(postContent.value);
+                }
+                if (!currentPostId) return;
+        
+                try {
+                    const response = await uploadMedia(currentPostId, file, type);
+                    const fileName = file.name;
+                    const link = `/post/${currentPostId}/${fileName}`;
+                    postContent.value += `[${fileName}](${link})\n`;
+                } catch (error) {
+                    console.error("Error uploading media:", error);
+                    alert("Failed to upload media. Please try again.");
+                }
+            }
+        
+            imageUpload.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+                if (file) handleMediaUpload(file, "image");
+            });
+        
+            fileUpload.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+                if (file) handleMediaUpload(file, "file");
+            });
+        
+            videoUpload.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+                if (file) handleMediaUpload(file, "video");
+            });
+        
+            postButton.addEventListener("click", async () => {
+                if (!currentPostId) {
+                    alert("No post to update. Please create or upload media first.");
+                    return;
+                }
+        
+                const content = postContent.value.trim();
+                if (!content) {
+                    alert("Post content cannot be empty!");
+                    return;
+                }
+        
+                try {
+                    await updatePost(currentPostId, content);
+                    alert("Post successfully updated!");
+                } catch (error) {
+                    console.error("Error updating post:", error);
+                    alert("Failed to update post. Please try again.");
+                }
+            });
+        });
         
     </script>
 </body>
