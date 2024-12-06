@@ -258,7 +258,7 @@ void send_verify_email(const httplib::Request &req, httplib::Response &res)
     std::string email = req.get_param_value("email");
     std::string code = generate_verification_code();
 
-    if (user_store.is_active_user(username, code))
+    if (user_store.store_active_code(username, code))
     {
         res.status = 500;
         res.set_content("{\"error\":\"Accout email already verified\"}", "application/json");

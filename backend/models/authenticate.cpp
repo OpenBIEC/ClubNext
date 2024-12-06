@@ -2,9 +2,9 @@
 #include "models/session_store.hpp"
 #include "models/user_store.hpp"
 
-bool authenticate_user(const httplib::Request &req, std::string &username)
+bool authenticate_user(const httplib::Request &req, std::string &username, int accept_mode)
 {
-    if (!user_store.is_active_user(username))
+    if (!user_store.accept_mode(username, accept_mode))
     {
         return false;
     }

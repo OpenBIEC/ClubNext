@@ -27,14 +27,28 @@ UserStore::~UserStore()
     save_to_file();
 }
 
-bool UserStore::is_active_user(const std::string &username, const std::string code)
+bool UserStore::accept_mode(const std::string &username, int mode)
 {
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        if (acc->second.user_mode)
+        if (acc->second.user_mode > mode)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool UserStore::store_active_code(const std::string &username, const std::string code)
+{
+    MapType::accessor acc;
+    if (users.find(acc, username))
+    {
+        if (acc->second.active_code.empty())
         {
             acc->second.active_code = code;
+            return true;
         }
     }
     return false;
@@ -45,7 +59,7 @@ bool UserStore::active_user(const std::string &username, const std::string code)
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        if (acc->second.user_mode || acc->second.active_code.empty())
+        if (acc->second.user_mode > 0 || acc->second.active_code.empty())
         {
             return false;
         }

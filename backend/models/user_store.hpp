@@ -124,7 +124,8 @@ class UserStore
     UserStore(const std::string &file_path);
     ~UserStore();
 
-    bool is_active_user(const std::string &username, const std::string code = "");
+    bool accept_mode(const std::string &username, int mode = 0);
+    bool store_active_code(const std::string &username, const std::string code);
     bool active_user(const std::string &username, const std::string code);
     bool register_user(const User &user);
     bool login_user(const std::string &username, const std::string &password);
