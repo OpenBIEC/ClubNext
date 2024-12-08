@@ -4,39 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
     <title>Sign Up Page</title>
     <style>
         body {
+            height: 100vh;
             margin: 0;
-            background-image: url('https://placehold.co/1920x1080'); /* Replace resolution as needed */
+            background-image: url('https://placehold.co/1920x1080');
             background-size: cover;
             background-position: center;
             display: flex;
-            flex-direction: column;
-        }
-        .main-content {
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex: 1;
-            padding: 20px;
         }
         .container {
             display: flex;
-            flex-wrap: wrap;
             gap: 30px;
             width: 90%;
             max-width: 1200px;
         }
         .info-box, .register-box {
             flex: 1;
-            min-width: 300px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .info-box h3 {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .forum-post {
+            background: rgba(240, 240, 240, 0.9);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .btn-lg {
             font-size: 1.2rem;
@@ -51,80 +53,62 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-house-fill"></i> Club Next
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile.html">
-                            <i class="bi bi-person-circle"></i> Profile
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/private_message.html">
-                            <i class="bi bi-chat-dots"></i> Messages
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/drafts.html">
-                            <i class="bi bi-file-earmark-text"></i> Drafts
-                        </a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </form>
+    <div class="container">
+        <!-- Information Box -->
+        <div class="info-box">
+            <h3>Forum Updates</h3>
+            <div id="forumContent">
+                <div class="forum-post">
+                    <h5>Upcoming Software/Feature Updates!</h5>
+                    <p class="text-muted">2024-11-30 15:55</p>
+                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                </div>
+                <div class="forum-post">
+                    <h5>Vote for the 2024 System Mirror!</h5>
+                    <p class="text-muted">2024-11-30 15:44</p>
+                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                </div>
+                <div class="forum-post">
+                    <h5>New Object Storage Discounts Launched!</h5>
+                    <p class="text-muted">2024-11-01 20:02</p>
+                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <!-- Information Box -->
-            <div class="info-box">
-                <h3>Why Register?</h3>
-                <p>Becoming a member gives you full access to our forum, allowing you to:</p>
-                <ul>
-                    <li>Join discussions and share ideas.</li>
-                    <li>Receive updates on the latest topics.</li>
-                    <li>Engage with a vibrant community.</li>
-                </ul>
-            </div>
+        <!-- Register Box -->
+        <div class="register-box">
+            <h3 class="text-center mb-3">Create Your Account</h3>
+            <form id="registerForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Choose a username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" id="registerBtn" class="btn btn-primary w-100 btn-lg">Sign Up</button>
+                <button type="button" id="signInBtn" class="btn btn-secondary w-100 btn-lg mt-2">Sign In</button>
+            </form>
 
-            <!-- Register Box -->
-            <div class="register-box">
-                <h3 class="text-center mb-3">Create Your Account</h3>
-                <form id="registerForm">
+            <div id="verificationSection" style="display: none;">
+                <form id="verifyCodeForm">
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" placeholder="Choose a username" required>
+                        <label for="verificationCode" class="form-label">Verification Code</label>
+                        <input type="text" class="form-control" id="verificationCode" placeholder="Enter your verification code" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email address" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 btn-lg">Sign Up</button>
-                    <a href="login.html" class="btn btn-secondary w-100 btn-lg mt-2">Back to Sign In</a>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Verify Code</button>
                 </form>
+                <button id="resendBtn" class="btn btn-secondary w-100 btn-lg mt-2">Resend Code</button>
             </div>
         </div>
     </div>
@@ -136,73 +120,97 @@
     </footer>
 
     <script>
+        document.getElementById('signInBtn').addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-        
-            if (password !== confirmPassword) {
-                alert('Passwords do not match.');
+
+            if (!username || !email || !password || password !== confirmPassword) {
+                alert('All fields are required and passwords must match.');
                 return;
             }
-        
+
             try {
-                // Perform registration
+                // Call user registration API
                 const response = await fetch('/api/user/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, email, password })
                 });
                 const data = await response.json();
-        
+
                 if (response.ok) {
-                    alert('Registration successful!');
-        
-                    // Notify user to wait for verification code
-                    alert('Verification code is being sent. Please wait patiently, this may take some time.');
-        
-                    // Send verification email (with cookies)
-                    const verifyResponse = await fetch(`/api/user/verify?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`, {
-                        method: 'GET',
-                        credentials: 'include', // Include cookies
-                    });
-                    const verifyData = await verifyResponse.json();
-        
-                    if (verifyResponse.ok) {
-                        alert(verifyData.message || 'Verification email sent successfully!');
-        
-                        // Prompt for verification code
-                        const verificationCode = prompt('Please enter the verification code sent to your email:');
-                        if (!verificationCode) {
-                            alert('Verification code is required.');
-                            return;
-                        }
-        
-                        // Validate the verification code (with cookies)
-                        const validateResponse = await fetch(`/api/user/validate?username=${encodeURIComponent(username)}&code=${encodeURIComponent(verificationCode)}`, {
-                            method: 'GET',
-                            credentials: 'include', // Include cookies
-                        });
-                        const validateData = await validateResponse.json();
-        
-                        if (validateResponse.ok) {
-                            alert(validateData.message || 'Verification successful! Registration complete.');
-                            window.location.href = 'login.html';
-                        } else {
-                            alert(validateData.error || 'Invalid verification code. Please try again.');
-                        }
-                    } else {
-                        alert(verifyData.error || 'Failed to send verification email.');
-                    }
+                    alert(data.message || 'Registration successful!');
+                    document.getElementById('registerBtn').style.display = 'none';
+                    document.getElementById('signInBtn').style.display = 'none';
+                    document.getElementById('verificationSection').style.display = 'block';
+                    await sendVerificationCode(username, email);
                 } else {
-                    alert(data.error || 'Registration failed');
+                    alert(data.error || 'Registration failed.');
                 }
             } catch (error) {
                 console.error('Error:', error);
             }
-        });        
-    </script>    
+        });
+
+        async function sendVerificationCode(username, email) {
+            try {
+                const response = await fetch(`/api/user/verify?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message || 'Verification code sent successfully!');
+                } else {
+                    alert(data.error || 'Failed to send verification code.');
+                }
+            } catch (error) {
+                console.error('Error sending verification code:', error);
+            }
+        }
+
+        document.getElementById('resendBtn').addEventListener('click', async () => {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+
+            await sendVerificationCode(username, email);
+        });
+
+        document.getElementById('verifyCodeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const verificationCode = document.getElementById('verificationCode').value;
+
+            if (!verificationCode) {
+                alert('Verification code is required.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/user/validate?username=${encodeURIComponent(username)}&code=${encodeURIComponent(verificationCode)}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message || 'Verification successful! Registration complete.');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(data.error || 'Invalid verification code.');
+                }
+            } catch (error) {
+                console.error('Error verifying code:', error);
+            }
+        });
+    </script>
 </body>
 </html>

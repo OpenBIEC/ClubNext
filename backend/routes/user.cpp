@@ -164,7 +164,7 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
         return;
     }
 
-    if (file.content.size() > Config::MAX_IMAGE_SIZE)
+    if (file.content.size() > config.MAX_IMAGE_SIZE)
     {
         res.status = 400;
         res.set_content(R"({"error":"File size exceeds limit of 2MB"})", "application/json");
@@ -195,7 +195,7 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
             return;
         }
 
-        std::string user_dir = Config::USER_DIR + username + "/";
+        std::string user_dir = config.USER_DIR + username + "/";
         std::filesystem::create_directories(user_dir);
 
         auto now = std::time(nullptr);
@@ -208,7 +208,7 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
         ofs.write(file.content.data(), file.content.size());
         ofs.close();
 
-        std::string avatar_url = Config::BASE_URL + username + "/" + filename;
+        std::string avatar_url = config.BASE_URL + username + "/" + filename;
         user_store.update_avatar(username, avatar_url);
 
         nlohmann::json response = {{"message", "Avatar uploaded successfully"}, {"avatar_url", avatar_url}};
@@ -247,10 +247,10 @@ void handle_user_get_profile(const httplib::Request &req, httplib::Response &res
 
 void send_verify_email(const httplib::Request &req, httplib::Response &res)
 {
-    if (!req.has_param("username"))
+    if (!req.has_param("username") || !req.has_param("email"))
     {
         res.status = 400;
-        res.set_content("{\"error\":\"User parameter is required\"}", "application/json");
+        res.set_content("{\"error\":\"Username and email parameter is required\"}", "application/json");
         return;
     }
 
@@ -258,10 +258,16 @@ void send_verify_email(const httplib::Request &req, httplib::Response &res)
     std::string email = req.get_param_value("email");
     std::string code = generate_verification_code();
 
-    if (user_store.store_active_code(username, code))
+    if (user_store.accept_mode(username))
     {
         res.status = 500;
         res.set_content("{\"error\":\"Accout email already verified\"}", "application/json");
+    }
+
+    if (!user_store.store_active_code(username, code))
+    {
+        res.status = 500;
+        res.set_content("{\"error\":\"Accout not found\"}", "application/json");
     }
 
     if (send_verification_code(email, code))
@@ -290,10 +296,10 @@ void verify_user_email(const httplib::Request &req, httplib::Response &res)
     if (!user_store.active_user(username, code))
     {
         res.status = 401;
-        res.set_content("{\"error\":\"Invalid verification code\"}", "application/json");
+        res.set_content("{\"error\":\"Invalid verification code " + code + "\"}", "application/json");
         return;
     }
 
     res.status = 200;
-    res.set_content("{\"error\":\"Verification successful\"}", "application/json");
+    res.set_content("{\"message\":\"Verification successful\"}", "application/json");
 }

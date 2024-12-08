@@ -45,11 +45,8 @@ bool UserStore::store_active_code(const std::string &username, const std::string
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        if (acc->second.active_code.empty())
-        {
-            acc->second.active_code = code;
-            return true;
-        }
+        acc->second.active_code = code;
+        return true;
     }
     return false;
 }

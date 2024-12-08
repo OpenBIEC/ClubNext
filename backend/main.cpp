@@ -16,6 +16,8 @@
 #include <iostream>
 #include <thread>
 
+Config config;
+
 SessionStore session_store;
 
 void session_cleanup_task()
@@ -57,7 +59,7 @@ int main()
 
     httplib::Server server;
 
-    server.set_mount_point("/", Config::STATIC_DIR);
+    server.set_mount_point("/", config.STATIC_DIR);
 
     server.Post("/api/user/register", handle_user_register);
     server.Post("/api/user/login", handle_user_login);

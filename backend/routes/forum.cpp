@@ -31,7 +31,7 @@ void create_post(const httplib::Request &req, httplib::Response &res)
     std::string content = body["content"].get<std::string>();
     int post_id = ++post_id_counter;
 
-    std::string post_dir = Config::POST_DIR + std::to_string(post_id) + "/";
+    std::string post_dir = config.POST_DIR + std::to_string(post_id) + "/";
     std::string content_file_path = post_dir + "content.md";
 
     if (std::filesystem::create_directories(post_dir))
@@ -94,7 +94,7 @@ void modify_post(const httplib::Request &req, httplib::Response &res)
 
     std::string content = body["content"].get<std::string>();
 
-    std::string post_dir = Config::POST_DIR + std::to_string(post_id) + "/";
+    std::string post_dir = config.POST_DIR + std::to_string(post_id) + "/";
     std::string content_file_path = post_dir + "content.md";
 
     std::ofstream content_file(content_file_path);
@@ -148,7 +148,7 @@ void upload_media(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    if (file.content.size() > Config::MAX_FILE_SIZE)
+    if (file.content.size() > config.MAX_FILE_SIZE)
     {
         res.status = 400;
         res.set_content(R"({"error":"File size exceeds limit of 20MB"})", "application/json");

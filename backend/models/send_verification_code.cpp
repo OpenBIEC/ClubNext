@@ -31,9 +31,9 @@ size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp)
 
 bool send_verification_code(const std::string &to_email, const std::string &code)
 {
-    const char *from_email = Config::VERIFY_EMAIL.c_str();
-    const char *from_password = Config::VERIFY_PASSWORD.c_str();
-    const char *smtp_server = Config::VERIFY_EMAIL_SERVER.c_str();
+    const char *from_email = config.VERIFY_EMAIL.c_str();
+    const char *from_password = config.VERIFY_PASSWORD.c_str();
+    const char *smtp_server = config.VERIFY_EMAIL_SERVER.c_str();
 
     std::string email_content =
         "From: \"TabVerify\" <" + std::string(from_email) +

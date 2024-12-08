@@ -56,7 +56,7 @@ void handle_post_comment(const httplib::Request &req, httplib::Response &res)
     Comment comment = {
         static_cast<int>(std::time(nullptr)), // 使用时间戳作为 comment_id
         body["author"].get<std::string>(),
-        Config::COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" +
+        config.COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" +
             std::to_string(static_cast<int>(std::time(nullptr))) + "/content.md",
         std::time(nullptr),
         false // 未删除
@@ -207,14 +207,14 @@ void handle_upload_comment_media(const httplib::Request &req, httplib::Response 
         return;
     }
 
-    if (file.content.size() > Config::MAX_FILE_SIZE)
+    if (file.content.size() > config.MAX_FILE_SIZE)
     {
         res.status = 400;
         res.set_content(R"({"error":"File size exceeds limit of 20MB"})", "application/json");
         return;
     }
 
-    std::string media_path = Config::COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" +
+    std::string media_path = config.COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" +
                              std::to_string(comment_id) + "/" + file.filename;
 
     fs::create_directories(fs::path(media_path).parent_path());

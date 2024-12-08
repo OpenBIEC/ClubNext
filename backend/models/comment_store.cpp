@@ -9,9 +9,9 @@ namespace fs = std::filesystem;
 
 CommentStore::CommentStore()
 {
-    if (!fs::exists(Config::COMMENT_DIR))
+    if (!fs::exists(config.COMMENT_DIR))
     {
-        fs::create_directories(Config::COMMENT_DIR);
+        fs::create_directories(config.COMMENT_DIR);
     }
     load_from_file();
 }
@@ -131,7 +131,7 @@ void CommentStore::save_to_file()
 
 void CommentStore::load_from_file()
 {
-    for (const auto &file : fs::directory_iterator(Config::COMMENT_DIR))
+    for (const auto &file : fs::directory_iterator(config.COMMENT_DIR))
     {
         if (file.path().extension() == ".json")
         {
@@ -156,10 +156,10 @@ void CommentStore::load_from_file()
 
 std::string CommentStore::get_post_comment_file(int post_id)
 {
-    return Config::COMMENT_DIR + "/post_" + std::to_string(post_id) + ".json";
+    return config.COMMENT_DIR + "/post_" + std::to_string(post_id) + ".json";
 }
 
 std::string CommentStore::get_comment_directory(int post_id, int comment_id)
 {
-    return Config::COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" + std::to_string(comment_id);
+    return config.COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" + std::to_string(comment_id);
 }

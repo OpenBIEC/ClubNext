@@ -64,9 +64,9 @@ void handle_send_message(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    if (content.length() > Config::MAX_MESSAGE_LENGTH)
+    if (content.length() > config.MAX_MESSAGE_LENGTH)
     {
-        content = content.substr(0, Config::MAX_MESSAGE_LENGTH);
+        content = content.substr(0, config.MAX_MESSAGE_LENGTH);
     }
 
     Message new_message = {sender_id, recipient_id, content, std::time(nullptr)};
