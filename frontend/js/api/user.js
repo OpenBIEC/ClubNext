@@ -42,7 +42,7 @@ function fetchUserProfile()
                 bio : data.bio,
                 followers : data.followers,
                 following : data.followings,
-                joinedDate : new Date(data.joined_at).toLocaleDateString()
+                joinedDate : new Date(data.joined_at * 1000).toLocaleDateString()
             };
         })
         .catch(error => {

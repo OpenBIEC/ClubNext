@@ -93,8 +93,8 @@ void handle_user_profile(const httplib::Request &req, httplib::Response &res)
         nlohmann::json response = {{"username", user.username},
                                    {"bio", user.bio},
                                    {"avatar", user.avatar_url},
-                                   {"followers", static_cast<int>(user.followers)},
-                                   {"followings", static_cast<int>(user.followings)},
+                                   {"followers", user.followers.load()},
+                                   {"followings", user.followings.load()},
                                    {"joined_at", user.joined_at}};
         res.status = 200;
         res.set_content(response.dump(), "application/json");
