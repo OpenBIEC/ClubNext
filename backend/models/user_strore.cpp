@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include "models/user_store.hpp"
 #include <algorithm>
 #include <chrono>
@@ -32,10 +33,7 @@ bool UserStore::accept_mode(const std::string &username, int mode)
     MapType::accessor acc;
     if (users.find(acc, username))
     {
-        if (acc->second.user_mode > mode)
-        {
-            return true;
-        }
+        return acc->second.user_mode > mode;
     }
     return false;
 }
@@ -60,7 +58,12 @@ bool UserStore::active_user(const std::string &username, const std::string code)
         {
             return false;
         }
-        return acc->second.active_code == code;
+        if (acc->second.active_code == code)
+        {
+            acc->second.user_mode = config.DEFAULT_USER_MODE;
+            return true;
+        }
+        return false;
     }
     return false;
 }
@@ -159,7 +162,6 @@ void UserStore::save_to_file()
         {
             if (item.second.user_mode == 0)
             {
-                users.erase(item.first);
                 continue;
             }
             json_data.push_back(item.second.to_json());

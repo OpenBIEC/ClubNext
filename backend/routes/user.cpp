@@ -18,7 +18,7 @@ void handle_user_register(const httplib::Request &req, httplib::Response &res)
                      body["password"].get<std::string>(),
                      body["email"].get<std::string>(),
                      "",
-                     "",
+                     "https://placehold.co/150",
                      User::VectorType(),
                      User::VectorType(),
                      0,

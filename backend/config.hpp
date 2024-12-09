@@ -17,6 +17,8 @@ struct Config
     const std::string VERIFY_PASSWORD = "SJc52AqkmnR4JRxh";
     const std::string VERIFY_EMAIL_SERVER = "smtps://smtp.163.com:465";
 
+    const int DEFAULT_USER_MODE = 1;
+
     const size_t MAX_MESSAGE_LENGTH = 1024;
     const size_t MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
     const size_t MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB

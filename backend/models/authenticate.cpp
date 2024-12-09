@@ -1,18 +1,26 @@
 #include "models/authenticate.hpp"
 #include "models/session_store.hpp"
 #include "models/user_store.hpp"
+#include <string>
 
 bool authenticate_user(const httplib::Request &req, std::string &username, int accept_mode)
 {
-    if (!user_store.accept_mode(username, accept_mode))
+
+    auto auth_header = req.get_header_value("Cookie");
+    auto location = auth_header.find("sessionid=", 0);
+    if (auth_header.empty() || location == std::string::npos)
     {
         return false;
     }
-    auto auth_header = req.get_header_value("Cookie");
-    if (!auth_header.empty() && auth_header.rfind("sessionid=", 0) == 0)
+    std::string token = auth_header.substr(location + 10, location + 42);
+
+    if (!session_store.validate_session(token, username))
     {
-        std::string token = auth_header.substr(7);
-        return session_store.validate_session(token, username);
+        return false;
+    }
+    if (user_store.accept_mode(username, accept_mode))
+    {
+        return true;
     }
     return false;
 }

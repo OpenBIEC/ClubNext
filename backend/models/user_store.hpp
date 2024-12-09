@@ -110,7 +110,7 @@ struct User
         user.followers.store(j["followers"].get<int>());
         user.followings.store(j["followings"].get<int>());
         user.joined_at = j["joined_at"].get<std::time_t>();
-        user.user_mode = j["user_mode"].get<bool>();
+        user.user_mode = j["user_mode"].get<int>();
 
         return user;
     }

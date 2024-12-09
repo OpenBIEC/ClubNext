@@ -2,22 +2,22 @@ function isUserLoggedIn()
 {
     return fetch('/api/user/profile', {
                method : 'GET',
-               credentials : 'include',
+               credentials : 'include' // Ensures cookies are sent with the request
            })
         .then(response => {
             if (response.status === 401)
             {
-                return false;
+                return false; // User not logged in
             }
             if (!response.ok)
             {
                 throw new Error('Error checking user login status');
             }
-            return true;
+            return true; // User logged in
         })
         .catch(error => {
             console.error('Error checking login status:', error);
-            return false;
+            return false; // Assume not logged in on error
         });
 }
 
@@ -25,28 +25,29 @@ function fetchUserProfile()
 {
     return fetch('/api/user/profile', {
                method : 'GET',
-               credentials : 'include',
+               credentials : 'include' // Ensures cookies are sent with the request
            })
         .then(response => {
             if (!response.ok)
             {
                 throw new Error('Failed to fetch user profile');
             }
-            return response.json();
+            return response.json(); // Parse the JSON response
         })
         .then(data => {
+            // Return a structured user profile object
             return {
                 username : data.username,
                 avatar : data.avatar,
                 bio : data.bio,
                 followers : data.followers,
                 following : data.followings,
-                joinedDate : new Date(data.joined_at).toLocaleDateString(),
+                joinedDate : new Date(data.joined_at).toLocaleDateString()
             };
         })
         .catch(error => {
             console.error('Error fetching user profile:', error);
-            return null;
+            return null; // Return null on error
         });
 }
 
