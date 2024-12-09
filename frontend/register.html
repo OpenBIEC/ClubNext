@@ -7,14 +7,20 @@
     <title>Sign Up Page</title>
     <style>
         body {
-            height: 100vh;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             background-image: url('https://placehold.co/1920x1080');
             background-size: cover;
             background-position: center;
+        }
+        .main-content {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         .container {
             display: flex;
@@ -46,69 +52,76 @@
         }
         footer {
             text-align: center;
-            padding: 20px 0;
+            padding: 10px 0;
             font-size: 14px;
             background: rgba(255, 255, 255, 0.9);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Information Box -->
-        <div class="info-box">
-            <h3>Forum Updates</h3>
-            <div id="forumContent">
-                <div class="forum-post">
-                    <h5>Upcoming Software/Feature Updates!</h5>
-                    <p class="text-muted">2024-11-30 15:55</p>
-                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
-                </div>
-                <div class="forum-post">
-                    <h5>Vote for the 2024 System Mirror!</h5>
-                    <p class="text-muted">2024-11-30 15:44</p>
-                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
-                </div>
-                <div class="forum-post">
-                    <h5>New Object Storage Discounts Launched!</h5>
-                    <p class="text-muted">2024-11-01 20:02</p>
-                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Information Box -->
+            <div class="info-box">
+                <h3>Forum Updates</h3>
+                <div id="forumContent">
+                    <div class="forum-post">
+                        <h5>Upcoming Software/Feature Updates!</h5>
+                        <p class="text-muted">2024-11-30 15:55</p>
+                        <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                    </div>
+                    <div class="forum-post">
+                        <h5>Vote for the 2024 System Mirror!</h5>
+                        <p class="text-muted">2024-11-30 15:44</p>
+                        <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                    </div>
+                    <div class="forum-post">
+                        <h5>New Object Storage Discounts Launched!</h5>
+                        <p class="text-muted">2024-11-01 20:02</p>
+                        <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Register Box -->
-        <div class="register-box">
-            <h3 class="text-center mb-3">Create Your Account</h3>
-            <form id="registerForm">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Choose a username" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email address" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-                </div>
-                <div class="mb-3">
-                    <label for="confirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
-                </div>
-                <button type="submit" id="registerBtn" class="btn btn-primary w-100 btn-lg">Sign Up</button>
-                <button type="button" id="signInBtn" class="btn btn-secondary w-100 btn-lg mt-2">Sign In</button>
-            </form>
-
-            <div id="verificationSection" style="display: none;">
-                <form id="verifyCodeForm">
+            <!-- Register Box -->
+            <div class="register-box">
+                <h3 class="text-center mb-3">Create Your Account</h3>
+                <form id="registerForm">
                     <div class="mb-3">
-                        <label for="verificationCode" class="form-label">Verification Code</label>
-                        <input type="text" class="form-control" id="verificationCode" placeholder="Enter your verification code" required>
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Choose a username" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 btn-lg">Verify Code</button>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email address" required>
+                    </div>
+                    <div id="passwordSection">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                        </div>
+                    </div>
+                    <div id="buttonSection">
+                        <button type="submit" id="registerBtn" class="btn btn-primary w-100 btn-lg">Sign Up</button>
+                        <button type="button" id="signInBtn" class="btn btn-secondary w-100 btn-lg mt-2">Sign In</button>
+                    </div>
                 </form>
-                <button id="resendBtn" class="btn btn-secondary w-100 btn-lg mt-2">Resend Code</button>
+
+                <div id="verificationSection" style="display: none;">
+                    <form id="verifyCodeForm">
+                        <div class="mb-3">
+                            <label for="verificationCode" class="form-label">Verification Code</label>
+                            <input type="text" class="form-control" id="verificationCode" placeholder="Enter your verification code" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">Verify Code</button>
+                    </form>
+                    <button id="resendBtn" class="btn btn-secondary w-100 btn-lg mt-2">Resend Code</button>
+                </div>
             </div>
         </div>
     </div>
@@ -119,6 +132,9 @@
         <p class="text-muted">Powered by a lightweight C++ backend and Bootstrap frontend. Visit our <a href="https://github.com/OpenBIEC/ClubNext" target="_blank">GitHub</a> for source code.</p>
     </footer>
 
+    <script src="/js/api/user.js"></script>
+    <script src="/js/api/post.js"></script>
+    <script src="/js/api/social.js"></script>
     <script>
         document.getElementById('signInBtn').addEventListener('click', () => {
             window.location.href = 'login.html';
@@ -147,9 +163,15 @@
 
                 if (response.ok) {
                     alert(data.message || 'Registration successful!');
-                    document.getElementById('registerBtn').style.display = 'none';
-                    document.getElementById('signInBtn').style.display = 'none';
+
+                    // Hide password fields and buttons
+                    document.getElementById('passwordSection').style.display = 'none';
+                    document.getElementById('buttonSection').style.display = 'none';
+
+                    // Show verification section
                     document.getElementById('verificationSection').style.display = 'block';
+
+                    // Automatically send verification code
                     await sendVerificationCode(username, email);
                 } else {
                     alert(data.error || 'Registration failed.');
@@ -158,24 +180,6 @@
                 console.error('Error:', error);
             }
         });
-
-        async function sendVerificationCode(username, email) {
-            try {
-                const response = await fetch(`/api/user/verify?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                });
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert(data.message || 'Verification code sent successfully!');
-                } else {
-                    alert(data.error || 'Failed to send verification code.');
-                }
-            } catch (error) {
-                console.error('Error sending verification code:', error);
-            }
-        }
 
         document.getElementById('resendBtn').addEventListener('click', async () => {
             const username = document.getElementById('username').value;

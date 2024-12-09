@@ -157,6 +157,11 @@ void UserStore::save_to_file()
         nlohmann::json json_data = nlohmann::json::array();
         for (const auto &item : users)
         {
+            if (item.second.user_mode == 0)
+            {
+                users.erase(item.first);
+                continue;
+            }
             json_data.push_back(item.second.to_json());
         }
         std::ofstream file(file_path, std::ios::out | std::ios::trunc);

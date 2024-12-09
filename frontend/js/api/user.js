@@ -49,3 +49,29 @@ function fetchUserProfile()
             return null;
         });
 }
+
+async function sendVerificationCode(username, email)
+{
+    try
+    {
+        const response = await fetch(
+            `/api/user/verify?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`, {
+                method : 'GET',
+                credentials : 'include',
+            });
+        const data = await response.json();
+
+        if (response.ok)
+        {
+            alert(data.message || 'Verification code sent successfully!');
+        }
+        else
+        {
+            alert(data.error || 'Failed to send verification code.');
+        }
+    }
+    catch (error)
+    {
+        console.error('Error sending verification code:', error);
+    }
+}
