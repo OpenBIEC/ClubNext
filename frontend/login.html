@@ -4,23 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/markdown.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <title>Sign In Page</title>
     <style>
         body {
-            height: 100vh;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             background-image: url('https://placehold.co/1920x1080'); /* Replace resolution as needed */
             background-size: cover;
             background-position: center;
+        }
+        .main-content {
+            flex: 1; /* Ensures content occupies the remaining space */
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         .container {
             display: flex;
+            flex-direction: column; /* Stack elements vertically by default */
             gap: 30px;
             width: 90%;
             max-width: 1200px;
+        }
+        @media (min-width: 992px) {
+            .container {
+                flex-direction: row; /* Side-by-side layout for larger screens */
+            }
         }
         .info-box, .login-box {
             flex: 1;
@@ -49,57 +63,80 @@
             padding: 20px 0;
             font-size: 14px;
             background: rgba(255, 255, 255, 0.9);
-            position: absolute;
-            bottom: 0;
-            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Information Box -->
-        <div class="info-box">
-            <h3>Forum Updates</h3>
-            <div id="forumContent">
-                <div class="forum-post">
-                    <h5>Upcoming Software/Feature Updates!</h5>
-                    <p class="text-muted">2024-11-30 15:55</p>
-                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
-                </div>
-                <div class="forum-post">
-                    <h5>Vote for the 2024 System Mirror!</h5>
-                    <p class="text-muted">2024-11-30 15:44</p>
-                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
-                </div>
-                <div class="forum-post">
-                    <h5>New Object Storage Discounts Launched!</h5>
-                    <p class="text-muted">2024-11-01 20:02</p>
-                    <a href="#" class="text-primary">View Details &gt;&gt;</a>
-                </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-house-fill"></i> Club Next
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto" id="navItems">
+                    <!-- Dynamic content based on login status -->
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
             </div>
         </div>
+    </nav>
 
-        <!-- Login Box -->
-        <div class="login-box">
-            <h3 class="text-center mb-3">Welcome Back</h3>
-            <form id="loginForm">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Information Box -->
+            <div class="info-box">
+                <h3>Forum Updates</h3>
+                <div id="forumContent">
+                    <div class="forum-post">
+                        <h5>Upcoming Software/Feature Updates!</h5>
+                        <p class="text-muted">2024-11-30 15:55</p>
+                        <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                    </div>
+                    <div class="forum-post">
+                        <h5>Vote for the 2024 System Mirror!</h5>
+                        <p class="text-muted">2024-11-30 15:44</p>
+                        <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                    </div>
+                    <div class="forum-post">
+                        <h5>New Object Storage Discounts Launched!</h5>
+                        <p class="text-muted">2024-11-01 20:02</p>
+                        <a href="#" class="text-primary">View Details &gt;&gt;</a>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <!-- Login Box -->
+            <div class="login-box">
+                <h3 class="text-center mb-3">Welcome Back</h3>
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="remember">
+                        <label class="form-check-label" for="remember">Remember me for 7 days</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Sign In</button>
+                    <a href="/register.html" class="btn btn-success w-100 btn-lg mt-2">Sign Up</a>
+                </form>
+                <div class="text-center mt-3">
+                    <p class="mb-1"><a href="#" class="text-primary">Forgot Password?</a></p>
                 </div>
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="remember">
-                    <label class="form-check-label" for="remember">Remember me for 7 days</label>
-                </div>
-                <button type="submit" class="btn btn-primary w-100 btn-lg">Sign In</button>
-                <a href="/register.html" class="btn btn-success w-100 btn-lg mt-2">Sign Up</a>
-            </form>
-            <div class="text-center mt-3">
-                <p class="mb-1"><a href="#" class="text-primary">Forgot Password?</a></p>
             </div>
         </div>
     </div>
@@ -110,7 +147,15 @@
         <p class="text-muted">Powered by a lightweight C++ backend and Bootstrap frontend. Visit our <a href="https://github.com/OpenBIEC/ClubNext" target="_blank">GitHub</a> for source code.</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="/js/api/user.js"></script>
+    <script src="/js/api/post.js"></script>
+    <script src="/js/api/social.js"></script>
+    <script src="/js/navbar.js"></script>
     <script>
+        updateNavBar();
+
         // Login form logic
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();

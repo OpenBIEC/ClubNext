@@ -39,29 +39,15 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <i class="bi bi-house-fill"></i> Club Next
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile.html">
-                            <i class="bi bi-person-circle"></i> Profile
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/private_message.html">
-                            <i class="bi bi-chat-dots"></i> Messages
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/drafts.html">
-                            <i class="bi bi-file-earmark-text"></i> Drafts
-                        </a>
-                    </li>
+                <ul class="navbar-nav me-auto" id="navItems">
+                    <!-- Dynamic content based on login status -->
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
@@ -255,7 +241,10 @@
     <script src="/js/api/user.js"></script>
     <script src="/js/api/post.js"></script>
     <script src="/js/api/social.js"></script>
+    <script src="/js/navbar.js"></script>
     <script>
+        updateNavBar();
+
         document.addEventListener("DOMContentLoaded", function () {
             function fetchUnreadMessages() {
                 return new Promise((resolve) => {
