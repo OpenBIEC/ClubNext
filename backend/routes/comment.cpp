@@ -13,7 +13,7 @@ void handle_get_comments(const httplib::Request &req, httplib::Response &res)
     int post_id = std::stoi(req.matches[1]); // 假设正则捕获 post_id
     auto comments = comment_store.get_comments(post_id);
 
-    nlohmann::json response = {{"post_id", post_id}, {"comments", nlohmann::json::array()}};
+    json response = {{"post_id", post_id}, {"comments", json::array()}};
     for (const auto &comment : comments)
     {
         std::ifstream file(comment.content_path);
@@ -22,7 +22,7 @@ void handle_get_comments(const httplib::Request &req, httplib::Response &res)
             continue; // 忽略无法读取的评论内容
         }
         std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-        nlohmann::json comment_json = comment.to_json();
+        json comment_json = comment.to_json();
         comment_json["content"] = content;
         response["comments"].push_back(comment_json);
     }
@@ -40,10 +40,10 @@ void handle_post_comment(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    nlohmann::json body;
+    json body;
     try
     {
-        body = nlohmann::json::parse(req.body);
+        body = json::parse(req.body);
     }
     catch (const std::exception &)
     {
@@ -109,10 +109,10 @@ void handle_edit_comment(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    nlohmann::json body;
+    json body;
     try
     {
-        body = nlohmann::json::parse(req.body);
+        body = json::parse(req.body);
     }
     catch (const std::exception &)
     {

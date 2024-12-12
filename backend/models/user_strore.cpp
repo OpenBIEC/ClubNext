@@ -157,7 +157,7 @@ void UserStore::save_to_file()
 {
     try
     {
-        nlohmann::json json_data = nlohmann::json::array();
+        json json_data = json::array();
         for (const auto &item : users)
         {
             if (item.second.user_mode == 0)
@@ -183,7 +183,7 @@ void UserStore::load_from_file()
         std::ifstream file(file_path);
         if (file.is_open())
         {
-            nlohmann::json json_data;
+            json json_data;
             file >> json_data;
             for (const auto &item : json_data)
             {

@@ -41,10 +41,10 @@ std::vector<Message> MessageStore::get_inbox(std::string user_id)
 
 void MessageStore::save_to_file()
 {
-    nlohmann::json json_data;
+    json json_data;
     for (const auto &entry : inbox)
     {
-        nlohmann::json messages_json = nlohmann::json::array();
+        json messages_json = json::array();
         for (const auto &message : entry.second)
         {
             messages_json.push_back(message.to_json());
@@ -69,7 +69,7 @@ void MessageStore::load_from_file()
         return; // No file to load, assume fresh start
     }
 
-    nlohmann::json json_data;
+    json json_data;
     file >> json_data;
     file.close();
 

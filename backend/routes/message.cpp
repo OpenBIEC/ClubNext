@@ -15,7 +15,7 @@ void handle_get_messages(const httplib::Request &req, httplib::Response &res)
     }
     auto messages = message_store.get_inbox(user_id);
 
-    nlohmann::json response = {{"messages", nlohmann::json::array()}};
+    json response = {{"messages", json::array()}};
     for (const auto &msg : messages)
     {
         response["messages"].push_back(msg.to_json());
@@ -26,10 +26,10 @@ void handle_get_messages(const httplib::Request &req, httplib::Response &res)
 
 void handle_send_message(const httplib::Request &req, httplib::Response &res)
 {
-    nlohmann::json body;
+    json body;
     try
     {
-        body = nlohmann::json::parse(req.body);
+        body = json::parse(req.body);
     }
     catch (const std::exception &)
     {

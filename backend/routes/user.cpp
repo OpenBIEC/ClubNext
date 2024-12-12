@@ -5,6 +5,7 @@
 #include "models/session_store.hpp"
 #include "models/user_store.hpp"
 #include <nlohmann/json.hpp>
+#include <wincrypt.h>
 
 using json = nlohmann::json;
 
@@ -48,7 +49,7 @@ void handle_user_login(const httplib::Request &req, httplib::Response &res)
 {
     try
     {
-        nlohmann::json body = nlohmann::json::parse(req.body);
+        auto body = json::parse(req.body);
 
         std::string username = body["username"].get<std::string>();
         std::string password = body["password"].get<std::string>();
@@ -61,8 +62,7 @@ void handle_user_login(const httplib::Request &req, httplib::Response &res)
 
             res.status = 200;
             res.set_header("Set-Cookie", "sessionid=" + token + "; Path=/; HttpOnly; Secure");
-            res.set_content(nlohmann::json({{"message", "Login successful"}, {"token", token}}).dump(),
-                            "application/json");
+            res.set_content(json({{"message", "Login successful"}, {"token", token}}).dump(), "application/json");
         }
         else
         {
@@ -90,12 +90,12 @@ void handle_user_profile(const httplib::Request &req, httplib::Response &res)
     User user;
     if (user_store.get_user(username, user))
     {
-        nlohmann::json response = {{"username", user.username},
-                                   {"bio", user.bio},
-                                   {"avatar", user.avatar_url},
-                                   {"followers", user.followers.load()},
-                                   {"followings", user.followings.load()},
-                                   {"joined_at", user.joined_at}};
+        json response = {{"username", user.username},
+                         {"bio", user.bio},
+                         {"avatar", user.avatar_url},
+                         {"followers", user.followers.load()},
+                         {"followings", user.followings.load()},
+                         {"joined_at", user.joined_at}};
         res.status = 200;
         res.set_content(response.dump(), "application/json");
     }
@@ -118,7 +118,7 @@ void handle_user_update_profile(const httplib::Request &req, httplib::Response &
 
     try
     {
-        nlohmann::json body = nlohmann::json::parse(req.body);
+        auto body = json::parse(req.body);
 
         std::string new_bio = body.value("bio", "");
         std::string new_avatar_url = body.value("avatar_url", "");
@@ -211,14 +211,14 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
         std::string avatar_url = config.BASE_URL + username + "/" + filename;
         user_store.update_avatar(username, avatar_url);
 
-        nlohmann::json response = {{"message", "Avatar uploaded successfully"}, {"avatar_url", avatar_url}};
+        json response = {{"message", "Avatar uploaded successfully"}, {"avatar_url", avatar_url}};
         res.status = 200;
         res.set_content(response.dump(), "application/json");
     }
     catch (const std::exception &e)
     {
         res.status = 500;
-        nlohmann::json response = {{"error", "Failed to upload avatar"}, {"details", e.what()}};
+        json response = {{"error", "Failed to upload avatar"}, {"details", e.what()}};
         res.set_content(response.dump(), "application/json");
     }
 }

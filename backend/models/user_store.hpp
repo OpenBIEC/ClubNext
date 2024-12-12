@@ -9,6 +9,8 @@
 #include <tbb/concurrent_vector.h>
 #include <thread>
 
+using json = nlohmann::json;
+
 struct User
 {
     using VectorType = tbb::concurrent_vector<std::string>;
@@ -71,7 +73,7 @@ struct User
         return *this;
     }
 
-    nlohmann::json to_json() const
+    json to_json() const
     {
         std::vector<std::string> follower_name_list(follower_names.begin(), follower_names.end());
         std::vector<std::string> following_name_list(following_names.begin(), following_names.end());
@@ -89,7 +91,7 @@ struct User
                 {"user_mode", user_mode}};
     }
 
-    static User from_json(const nlohmann::json &j)
+    static User from_json(const json &j)
     {
         User user;
         user.username = j["username"].get<std::string>();

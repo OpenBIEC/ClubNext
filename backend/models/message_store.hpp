@@ -9,6 +9,8 @@
 #include <thread>
 #include <vector>
 
+using json = nlohmann::json;
+
 struct Message
 {
     std::string sender_id;
@@ -16,13 +18,13 @@ struct Message
     std::string content;
     std::time_t timestamp;
 
-    nlohmann::json to_json() const
+    json to_json() const
     {
         return {
             {"sender_id", sender_id}, {"recipient_id", recipient_id}, {"content", content}, {"timestamp", timestamp}};
     }
 
-    static Message from_json(const nlohmann::json &j)
+    static Message from_json(const json &j)
     {
         return {j["sender_id"].get<std::string>(), j["recipient_id"].get<std::string>(),
                 j["content"].get<std::string>(), j["timestamp"].get<std::time_t>()};

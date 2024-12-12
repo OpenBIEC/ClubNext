@@ -113,7 +113,7 @@ void CommentStore::save_to_file()
 {
     for (const auto &entry : comments_map)
     {
-        nlohmann::json json_data = nlohmann::json::array();
+        auto json_data = json::array();
         for (const auto &comment : entry.second)
         {
             json_data.push_back(comment.to_json());
@@ -140,7 +140,7 @@ void CommentStore::load_from_file()
             if (!in_file.is_open())
                 continue;
 
-            nlohmann::json json_data;
+            json json_data;
             in_file >> json_data;
             in_file.close();
 

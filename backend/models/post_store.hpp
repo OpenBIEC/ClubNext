@@ -10,7 +10,8 @@
 #include <thread>
 #include <vector>
 
-// 定义 Post 结构体
+using json = nlohmann::json;
+
 struct Post
 {
     using VectorType = tbb::concurrent_vector<std::string>;
@@ -60,7 +61,7 @@ struct Post
         return *this;
     }
 
-    nlohmann::json to_json() const
+    json to_json() const
     {
         std::vector<std::string> liked_by_users_vector(liked_by_users.begin(), liked_by_users.end());
 
@@ -75,7 +76,7 @@ struct Post
                 {"created_at", created_at}};
     }
 
-    static Post from_json(const nlohmann::json &j)
+    static Post from_json(const json &j)
     {
         Post post(j["id"].get<int>(), j["author"].get<std::string>(), j["content"].get<std::string>());
         post.media = j["media"].get<std::vector<std::string>>();
@@ -93,7 +94,6 @@ struct Post
     }
 };
 
-// 定义 PostStore 类
 class PostStore
 {
   public:

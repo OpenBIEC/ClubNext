@@ -8,6 +8,8 @@
 #include <tbb/concurrent_vector.h>
 #include <vector>
 
+using json = nlohmann::json;
+
 struct Comment
 {
     int comment_id;
@@ -16,7 +18,7 @@ struct Comment
     std::time_t timestamp;
     bool is_deleted;
 
-    nlohmann::json to_json() const
+    json to_json() const
     {
         return {{"comment_id", comment_id},
                 {"author", author},
@@ -25,7 +27,7 @@ struct Comment
                 {"is_deleted", is_deleted}};
     }
 
-    static Comment from_json(const nlohmann::json &j)
+    static Comment from_json(const json &j)
     {
         return {j["comment_id"].get<int>(), j["author"].get<std::string>(), j["content_path"].get<std::string>(),
                 j["timestamp"].get<std::time_t>(), j["is_deleted"].get<bool>()};

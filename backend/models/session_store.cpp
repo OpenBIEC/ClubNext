@@ -14,10 +14,10 @@ std::string SessionStore::generate_token() const
     return token;
 }
 
-std::string SessionStore::create_session(const std::string &username)
+std::string SessionStore::create_session(const std::string &username, int remember_hour)
 {
     std::string token = generate_token();
-    Session session{username, std::chrono::steady_clock::now() + std::chrono::hours(1)};
+    Session session{username, std::chrono::steady_clock::now() + std::chrono::hours(remember_hour)};
     sessions.insert({token, session});
     return token;
 }

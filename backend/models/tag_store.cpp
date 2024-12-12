@@ -50,7 +50,7 @@ void TagStore::save_to_file()
 {
     try
     {
-        nlohmann::json json_data = nlohmann::json::array();
+        json json_data = json::array();
         for (const auto &item : tags)
         {
             json_data.push_back(item.second.to_json());
@@ -72,7 +72,7 @@ void TagStore::load_from_file()
         std::ifstream file(file_path);
         if (file.is_open())
         {
-            nlohmann::json json_data;
+            json json_data;
             file >> json_data;
             for (const auto &item : json_data)
             {

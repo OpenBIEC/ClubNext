@@ -7,24 +7,24 @@
 #include <tbb/concurrent_hash_map.h>
 #include <thread>
 
-// 定义 Tag 结构体
+using json = nlohmann::json;
+
 struct Tag
 {
     int id;
     std::string name;
 
-    nlohmann::json to_json() const
+    json to_json() const
     {
         return {{"id", id}, {"name", name}};
     }
 
-    static Tag from_json(const nlohmann::json &j)
+    static Tag from_json(const json &j)
     {
         return {j["id"].get<int>(), j["name"].get<std::string>()};
     }
 };
 
-// 定义 TagStore 类
 class TagStore
 {
   public:
