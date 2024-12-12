@@ -97,7 +97,7 @@ void SessionStore::save_to_file()
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error saving post store to file: " << e.what() << std::endl;
+        std::cerr << "Error saving session store to file: " << e.what() << std::endl;
     }
 }
 
@@ -122,7 +122,7 @@ void SessionStore::load_from_file()
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error loading post store from file: " << e.what() << std::endl;
+        std::cerr << "Error loading session store from file: " << e.what() << std::endl;
     }
 }
 

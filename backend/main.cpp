@@ -45,6 +45,7 @@ void signal_handler(int signal)
         tag_store.save_to_file();
         message_store.save_to_file();
         comment_store.save_to_file();
+        session_store.save_to_file();
         std::cout << "Data saved successfully. Exiting..." << std::endl;
         exit(0);
     }
