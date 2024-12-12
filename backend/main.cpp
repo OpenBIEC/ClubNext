@@ -18,13 +18,13 @@
 
 Config config;
 
-SessionStore session_store;
+SessionStore session_store("session_store.json");
 
 void session_cleanup_task()
 {
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::minutes(10)); // 每 10 分钟清理一次
+        std::this_thread::sleep_for(std::chrono::minutes(10));
         session_store.cleanup_sessions();
     }
 }
