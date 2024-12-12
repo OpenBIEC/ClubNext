@@ -155,21 +155,34 @@
     <script src="/js/navbar.js"></script>
     <script>
         updateNavBar();
-
+    
         // Login form logic
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
+            const rememberMe = document.getElementById('remember').checked; // Check if "Remember Me" is selected
+    
             try {
+                // Create the request payload
+                const payload = {
+                    username: username,
+                    password: password
+                };
+    
+                // Add "remember_me" if the checkbox is selected
+                if (rememberMe) {
+                    payload.remember_me = true;
+                }
+    
                 const response = await fetch('/api/user/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify(payload) // Include the payload with or without "remember_me"
                 });
+    
                 const data = await response.json();
-
+    
                 if (response.ok) {
                     alert('Sign In successful!');
                     window.location.href = 'index.html';
@@ -180,6 +193,6 @@
                 console.error('Error:', error);
             }
         });
-    </script>
+    </script>    
 </body>
 </html>

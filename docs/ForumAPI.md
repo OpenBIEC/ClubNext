@@ -46,7 +46,8 @@
   ```json
   {
     "username": "string",
-    "password": "string"
+    "password": "string",
+    "remember_me": "any" // Optional
   }
   ```
 

@@ -58,7 +58,8 @@ void handle_user_login(const httplib::Request &req, httplib::Response &res)
         {
             session_store.remove_session(username);
 
-            std::string token = session_store.create_session(username);
+            auto token = body.contains("remember_me") ? session_store.create_session(username)
+                                                      : session_store.create_session(username, 7 * 24);
 
             res.status = 200;
             res.set_header("Set-Cookie", "sessionid=" + token + "; Path=/; HttpOnly; Secure");
