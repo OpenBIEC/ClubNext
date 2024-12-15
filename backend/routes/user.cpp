@@ -24,8 +24,9 @@ void handle_user_register(const httplib::Request &req, httplib::Response &res)
                      User::VectorType(),
                      0,
                      0,
+                     config.MAX_USER_SPACE,
                      std::time(nullptr),
-                     false};
+                     0};
 
         if (user_store.register_user(user))
         {
@@ -165,10 +166,10 @@ void handle_user_update_avatar(const httplib::Request &req, httplib::Response &r
         return;
     }
 
-    if (file.content.size() > config.MAX_IMAGE_SIZE)
+    if (!user_store.use_space(username, file.content.size()))
     {
         res.status = 400;
-        res.set_content(R"({"error":"File size exceeds limit of 2MB"})", "application/json");
+        res.set_content(R"({"error":"User file space exceeds limit of 1GB"})", "application/json");
         return;
     }
 

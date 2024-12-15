@@ -20,8 +20,7 @@ struct Config
     const int DEFAULT_USER_MODE = 1;
 
     const size_t MAX_MESSAGE_LENGTH = 1024;
-    const size_t MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
-    const size_t MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+    const size_t MAX_USER_SPACE = 1 * 1024 * 1024 * 1024; // 1GB
 }; // namespace Config
 
 extern Config config;

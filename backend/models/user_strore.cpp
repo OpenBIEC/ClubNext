@@ -100,6 +100,20 @@ bool UserStore::get_user(const std::string &username, User &user)
     return false;
 }
 
+bool UserStore::use_space(const std::string &username, size_t file_size)
+{
+    MapType::accessor acc;
+    if (users.find(acc, username))
+    {
+        if (acc->second.user_space.load() > file_size)
+        {
+            acc->second.user_space -= file_size;
+            return true;
+        }
+    }
+    return false;
+}
+
 void UserStore::update_avatar(const std::string &username, const std::string &avatar_url)
 {
     MapType::accessor acc;

@@ -3,6 +3,7 @@
 #include "models/authenticate.hpp"
 #include "models/post_store.hpp"
 #include "models/tag_store.hpp"
+#include "models/user_store.hpp"
 #include <algorithm>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -148,10 +149,10 @@ void upload_media(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    if (file.content.size() > config.MAX_FILE_SIZE)
+    if (!user_store.use_space(username, file.content.size()))
     {
         res.status = 400;
-        res.set_content(R"({"error":"File size exceeds limit of 20MB"})", "application/json");
+        res.set_content(R"({"error":"User file space exceeds limit of 1GB"})", "application/json");
         return;
     }
 

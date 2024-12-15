@@ -2,6 +2,7 @@
 #include "config.hpp"
 #include "models/authenticate.hpp"
 #include "models/comment_store.hpp"
+#include "models/user_store.hpp"
 #include <filesystem>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -207,7 +208,7 @@ void handle_upload_comment_media(const httplib::Request &req, httplib::Response 
         return;
     }
 
-    if (file.content.size() > config.MAX_FILE_SIZE)
+    if (!user_store.use_space(username, file.content.size()))
     {
         res.status = 400;
         res.set_content(R"({"error":"File size exceeds limit of 20MB"})", "application/json");

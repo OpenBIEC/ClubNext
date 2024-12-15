@@ -2,6 +2,7 @@
 #define MODELS_USER_STORE_HPP
 
 #include <atomic>
+#include <cstddef>
 #include <ctime>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -24,6 +25,7 @@ struct User
     VectorType following_names;
     std::atomic<int> followers;
     std::atomic<int> followings;
+    std::atomic<size_t> user_space;
     std::time_t joined_at;
     int user_mode;
     std::string active_code;
@@ -34,19 +36,20 @@ struct User
 
     User(const std::string &uname, const std::string &pwd, const std::string &mail, const std::string &bio_text,
          const std::string &avatar, const VectorType &followers_list, const VectorType &following_list,
-         int follower_count, int following_count, std::time_t join_time, int usermode,
+         int follower_count, int following_count, size_t userspace, std::time_t join_time, int usermode,
          const std::string &activation_code = "")
         : username(uname), password(pwd), email(mail), bio(bio_text), avatar_url(avatar),
           follower_names(followers_list), following_names(following_list), followers(follower_count),
-          followings(following_count), joined_at(join_time), user_mode(usermode), active_code(activation_code)
+          followings(following_count), user_space(userspace), joined_at(join_time), user_mode(usermode),
+          active_code(activation_code)
     {
     }
 
     User(const User &other)
         : username(other.username), password(other.password), email(other.email), bio(other.bio),
           avatar_url(other.avatar_url), follower_names(other.follower_names), following_names(other.following_names),
-          followers(other.followers.load()), followings(other.followings.load()), joined_at(other.joined_at),
-          user_mode(other.user_mode), active_code(other.active_code)
+          followers(other.followers.load()), followings(other.followings.load()), user_space(other.user_space.load()),
+          joined_at(other.joined_at), user_mode(other.user_mode), active_code(other.active_code)
     {
     }
 
@@ -65,6 +68,7 @@ struct User
 
         followers.store(other.followers.load());
         followings.store(other.followings.load());
+        user_space.store(other.user_space.load());
 
         joined_at = other.joined_at;
         user_mode = other.user_mode;
@@ -87,6 +91,7 @@ struct User
                 {"following_names", following_name_list},
                 {"followers", followers.load()},
                 {"followings", followings.load()},
+                {"user_space", user_space.load()},
                 {"joined_at", joined_at},
                 {"user_mode", user_mode}};
     }
@@ -111,6 +116,7 @@ struct User
 
         user.followers.store(j["followers"].get<int>());
         user.followings.store(j["followings"].get<int>());
+        user.followings.store(j["user_space"].get<size_t>());
         user.joined_at = j["joined_at"].get<std::time_t>();
         user.user_mode = j["user_mode"].get<int>();
 
@@ -132,6 +138,7 @@ class UserStore
     bool register_user(const User &user);
     bool login_user(const std::string &username, const std::string &password);
     bool get_user(const std::string &username, User &user);
+    bool use_space(const std::string &username, size_t file_size);
     void update_avatar(const std::string &username, const std::string &avatar_url);
     void follower_user(const std::string &username, const std::string &user_id);
     void following_user(const std::string &username, const std::string &user_id);
