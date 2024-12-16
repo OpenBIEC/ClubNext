@@ -30,7 +30,7 @@ struct User
     int user_mode;
     std::string active_code;
 
-    User() : followers(0), followings(0), joined_at(std::time(nullptr)), user_mode(0)
+    User() : followers(0), followings(0), user_space(0), joined_at(std::time(nullptr)), user_mode(0)
     {
     }
 
@@ -116,7 +116,7 @@ struct User
 
         user.followers.store(j["followers"].get<int>());
         user.followings.store(j["followings"].get<int>());
-        user.followings.store(j["user_space"].get<size_t>());
+        user.user_space.store(j["user_space"].get<size_t>());
         user.joined_at = j["joined_at"].get<std::time_t>();
         user.user_mode = j["user_mode"].get<int>();
 
