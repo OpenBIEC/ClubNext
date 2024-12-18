@@ -41,8 +41,29 @@ async function fetchPostDetails(postId)
     }
 }
 
-function generatePostHTML({id, author, content, media, like_count, liked_by_user, comment_count})
+async function generatePostHTML({id, author, content, media, like_count, liked_by_user, comment_count})
 {
+    let parsedContent = '';
+
+    try
+    {
+        const response = await fetch(content);
+        if (response.ok)
+        {
+            const markdown = await response.text();
+            parsedContent = marked.parse(markdown);
+        }
+        else
+        {
+            parsedContent = '<p class="text-danger">Failed to load content.</p>';
+        }
+    }
+    catch (error)
+    {
+        console.error('Error fetching content:', error);
+        parsedContent = '<p class="text-danger">Error loading content.</p>';
+    }
+
     return `
         <div class="mb-3">
             <div class="card">
@@ -52,7 +73,7 @@ function generatePostHTML({id, author, content, media, like_count, liked_by_user
         author}'s Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
                         <h6 class="card-subtitle mb-0 text-muted">@${author}</h6>
                     </div>
-                    <div class="card-text markdown-content">${marked.parse(content)}</div>
+                    <div class="card-text markdown-content">${parsedContent}</div>
                     <div class="d-flex mt-3">
                         <button class="btn me-2 like-button ${liked_by_user ? "text-danger" : "text-muted"}" data-id="${
         id}">
@@ -86,7 +107,7 @@ async function loadMorePosts(postList, loadingIndicator, limit = 5)
             const postDetails = await fetchPostDetails(postId);
             if (postDetails)
             {
-                postList.insertAdjacentHTML("beforeend", generatePostHTML(postDetails));
+                postList.insertAdjacentHTML("beforeend", await generatePostHTML(postDetails));
             }
         }
 

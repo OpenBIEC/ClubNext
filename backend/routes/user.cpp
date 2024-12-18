@@ -5,7 +5,6 @@
 #include "models/session_store.hpp"
 #include "models/user_store.hpp"
 #include <nlohmann/json.hpp>
-#include <wincrypt.h>
 
 using json = nlohmann::json;
 

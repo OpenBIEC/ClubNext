@@ -61,6 +61,7 @@ int main()
     httplib::Server server;
 
     server.set_mount_point("/", config.STATIC_DIR);
+    server.set_mount_point("/posts", config.POST_DIR);
 
     server.Post("/api/user/register", handle_user_register);
     server.Post("/api/user/login", handle_user_login);

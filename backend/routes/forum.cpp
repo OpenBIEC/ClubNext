@@ -6,6 +6,7 @@
 #include "models/user_store.hpp"
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
@@ -178,8 +179,8 @@ void upload_media(const httplib::Request &req, httplib::Response &res)
 void get_post_detail(const httplib::Request &req, httplib::Response &res)
 {
     int post_id = std::stoi(req.matches[1]);
-    Post post;
 
+    Post post;
     if (!post_store.get_post(post_id, post))
     {
         res.status = 404;
@@ -187,7 +188,7 @@ void get_post_detail(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    res.set_content(post.to_json(), "application/json");
+    res.set_content(post.to_json().dump(), "application/json");
 }
 
 void add_tags_to_post(const httplib::Request &req, httplib::Response &res)
