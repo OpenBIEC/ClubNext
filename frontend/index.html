@@ -317,15 +317,14 @@
             postList.addEventListener("click", async (event) => {
                 const button = event.target.closest("button");
                 if (!button) return;
-
+            
                 const postId = button.dataset.id;
-
+            
                 if (button.classList.contains("like-button")) {
                     const icon = button.querySelector("i");
-                    const likeCountElement = button.querySelector('span');
-                    const likeCount = parseInt(likeCountElement.textContent.trim(), 10);
+                    let likeCount = parseInt(button.textContent.trim(), 10);
                     const isLiked = button.classList.contains("text-danger");
-
+            
                     try {
                         let updatedCount;
                         if (!isLiked) {
@@ -340,16 +339,17 @@
                         button.classList.toggle("text-muted", isLiked);
                         icon.classList.toggle("bi-heart-fill", !isLiked);
                         icon.classList.toggle("bi-heart", isLiked);
-                        likeCountElement.textContent = updatedCount;
+                        button.textContent = ` ${updatedCount}`;
+                        button.prepend(icon);
                     } catch (error) {
                         alert(`Failed to ${isLiked ? "unlike" : "like"} the post. Please try again.`);
                     }
                 }
-
+            
                 if (button.classList.contains("comment-button")) {
                     alert(`View comments for post ID: ${postId}`);
                 }
-            });
+            });            
         });
         
         document.addEventListener("DOMContentLoaded", async () => {
