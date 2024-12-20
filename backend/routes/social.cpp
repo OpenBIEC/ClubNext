@@ -2,6 +2,7 @@
 #include "models/authenticate.hpp"
 #include "models/post_store.hpp"
 #include "models/user_store.hpp"
+#include <algorithm>
 
 void handle_follow_user(const httplib::Request &req, httplib::Response &res)
 {
@@ -81,16 +82,17 @@ void handle_like_post(const httplib::Request &req, httplib::Response &res)
     }
 
     auto post_id = std::stoi(req.matches[1]);
-    Post post;
+    PostStore::MapType::accessor acc;
 
-    if (!post_store.get_post(post_id, post))
+    if (!post_store.get_acc(post_id, acc))
     {
         res.status = 404;
         res.set_content("{\"message\":\"Post not found\"}", "application/json");
         return;
     }
+    Post &post = acc->second;
 
-    if (std::ranges::find(post.liked_by_users, username) == post.liked_by_users.end())
+    if (std::ranges::find(post.liked_by_users, username) != post.liked_by_users.end())
     {
         res.status = 403;
         res.set_content("{\"error\":\"Forbidden\"}", "application/json");
@@ -98,6 +100,7 @@ void handle_like_post(const httplib::Request &req, httplib::Response &res)
     }
 
     post.like_count++;
+    post.liked_by_users.push_back(username);
     post_store.save_to_file();
 
     res.set_content("{\"message\":\"Post liked successfully\"}", "application/json");
@@ -114,16 +117,17 @@ void handle_unlike_post(const httplib::Request &req, httplib::Response &res)
     }
 
     auto post_id = std::stoi(req.matches[1]);
-    Post post;
+    PostStore::MapType::accessor acc;
 
-    if (!post_store.get_post(post_id, post))
+    if (!post_store.get_acc(post_id, acc))
     {
         res.status = 404;
         res.set_content("{\"message\":\"Post not found\"}", "application/json");
         return;
     }
+    Post &post = acc->second;
 
-    if (std::ranges::find(post.liked_by_users, username) != post.liked_by_users.end())
+    if (std::ranges::find(post.liked_by_users, username) == post.liked_by_users.end())
     {
         res.status = 403;
         res.set_content("{\"error\":\"Forbidden\"}", "application/json");
@@ -131,6 +135,7 @@ void handle_unlike_post(const httplib::Request &req, httplib::Response &res)
     }
 
     post.like_count--;
+    std::ranges::find(post.liked_by_users, username)->clear();
     post_store.save_to_file();
 
     res.set_content("{\"message\":\"Post unliked successfully\"}", "application/json");

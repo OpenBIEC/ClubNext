@@ -1,9 +1,12 @@
 #ifndef MODELS_POST_STORE_HPP
 #define MODELS_POST_STORE_HPP
 
+#include <algorithm>
 #include <atomic>
 #include <ctime>
+#include <iterator>
 #include <nlohmann/json.hpp>
+#include <ranges>
 #include <string>
 #include <tbb/concurrent_hash_map.h>
 #include <tbb/concurrent_vector.h>
@@ -63,7 +66,9 @@ struct Post
 
     json to_json() const
     {
-        std::vector<std::string> liked_by_users_vector(liked_by_users.begin(), liked_by_users.end());
+        std::vector<std::string> liked_by_users_vector;
+        std::ranges::copy(liked_by_users | std::ranges::views::filter([](std::string str) { return !str.empty(); }),
+                          std::back_inserter(liked_by_users_vector));
 
         return {{"id", id},
                 {"author", author},
@@ -105,6 +110,7 @@ class PostStore
     bool add_post(const Post &post);
     bool get_post(int id, Post &post);
     bool set_post(int id, const Post &post);
+    bool get_acc(int id, MapType::accessor &acc);
     void save_to_file();
 
     MapType &get_posts();

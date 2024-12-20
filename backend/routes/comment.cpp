@@ -54,16 +54,11 @@ void handle_post_comment(const httplib::Request &req, httplib::Response &res)
     }
 
     int post_id = std::stoi(req.matches[1]);
-    Comment comment = {
-        static_cast<int>(std::time(nullptr)), // 使用时间戳作为 comment_id
-        body["author"].get<std::string>(),
-        config.COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" +
-            std::to_string(static_cast<int>(std::time(nullptr))) + "/content.md",
-        std::time(nullptr),
-        false // 未删除
-    };
+    Comment comment = {static_cast<int>(std::time(nullptr)), body["author"].get<std::string>(),
+                       config.COMMENT_DIR + "/post_" + std::to_string(post_id) + "/comment_" +
+                           std::to_string(static_cast<int>(std::time(nullptr))) + "/content.md",
+                       std::time(nullptr), false};
 
-    // 保存评论内容
     fs::create_directories(fs::path(comment.content_path).parent_path());
     std::ofstream file(comment.content_path);
     if (!file.is_open())
