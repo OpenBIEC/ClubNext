@@ -1,10 +1,11 @@
-#include "config.hpp"
 #include "models/user_store.hpp"
+#include "config.hpp"
 #include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+
 
 UserStore::UserStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {

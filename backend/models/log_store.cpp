@@ -4,7 +4,6 @@
 #include <iostream>
 #include <thread>
 
-
 LogStore::LogStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {
     load_from_file();
@@ -63,21 +62,24 @@ void LogStore::save_to_file()
 
 void LogStore::load_from_file()
 {
-    std::ifstream file(file_path);
-
-    if (!file.is_open())
+    try
     {
-        std::cerr << "Failed to open log file for loading: " << file_path << std::endl;
-        return;
+        std::ifstream file(file_path);
+        if (file.is_open())
+        {
+            json json_data;
+            file >> json_data;
+            for (const auto &item : json_data)
+            {
+                LogEntry log_entry = LogEntry::from_json(item);
+                logs.push_back(log_entry);
+            }
+            file.close();
+        }
     }
-
-    json j_logs;
-    file >> j_logs;
-    file.close();
-
-    for (const auto &j_log : j_logs)
+    catch (const std::exception &e)
     {
-        logs.push_back(LogEntry::from_json(j_log));
+        std::cerr << "Error loading log store from file: " << e.what() << std::endl;
     }
 }
 

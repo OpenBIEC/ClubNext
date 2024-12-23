@@ -12,10 +12,10 @@ using json = nlohmann::json;
 
 enum class LogLevel
 {
-    INFO,
-    WARNING,
-    ERROR,
-    DEBUG
+    INFO_LOG,
+    WARNING_LOG,
+    ERROR_LOG,
+    DEBUG_LOG
 };
 
 struct LogEntry
@@ -39,6 +39,8 @@ struct LogEntry
 class LogStore
 {
   public:
+    using VectorType = tbb::concurrent_vector<LogEntry>;
+
     LogStore(const std::string &file_path);
     ~LogStore();
 
@@ -48,7 +50,7 @@ class LogStore
     void load_from_file();
 
   private:
-    tbb::concurrent_vector<LogEntry> logs;
+    VectorType logs;
     std::string file_path;
     std::atomic<bool> stop_saving;
     std::thread save_thread;
