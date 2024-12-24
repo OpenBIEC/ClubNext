@@ -19,8 +19,10 @@ struct Config
 
     const int DEFAULT_USER_MODE = 1;
 
-    const size_t MAX_MESSAGE_LENGTH = 1024;
+    const size_t MAX_MESSAGE_LENGTH = 1024;               // 1KB
     const size_t MAX_USER_SPACE = 1 * 1024 * 1024 * 1024; // 1GB
+
+    const size_t PERIODIC_SAVE = 60;
 }; // namespace Config
 
 extern Config config;

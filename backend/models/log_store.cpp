@@ -1,4 +1,5 @@
 #include "log_store.hpp"
+#include "config.hpp"
 #include <chrono>
 #include <fstream>
 #include <iostream>
@@ -7,7 +8,13 @@
 LogStore::LogStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {
     load_from_file();
-    save_thread = std::thread(&LogStore::periodic_save, this);
+    save_thread = std::thread([this]() {
+        while (!stop_saving.load())
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(config.PERIODIC_SAVE));
+            save_to_file();
+        }
+    });
 }
 
 LogStore::~LogStore()
@@ -62,12 +69,17 @@ void LogStore::save_to_file()
 
 void LogStore::load_from_file()
 {
+    if (is_saving.test_and_set())
+    {
+        return;
+    }
+
     try
     {
+        json json_data;
         std::ifstream file(file_path);
         if (file.is_open())
         {
-            json json_data;
             file >> json_data;
             for (const auto &item : json_data)
             {
@@ -80,14 +92,5 @@ void LogStore::load_from_file()
     catch (const std::exception &e)
     {
         std::cerr << "Error loading log store from file: " << e.what() << std::endl;
-    }
-}
-
-void LogStore::periodic_save()
-{
-    while (!stop_saving)
-    {
-        std::this_thread::sleep_for(std::chrono::minutes(10));
-        save_to_file();
     }
 }

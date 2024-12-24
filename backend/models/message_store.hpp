@@ -44,15 +44,15 @@ class MessageStore
     std::vector<Message> get_inbox(std::string user_id);
 
     void save_to_file();
-    void load_from_file();
 
   private:
     InboxType inbox;
     std::string file_path;
     std::atomic<bool> stop_saving;
     std::thread save_thread;
+    std::atomic_flag is_saving = ATOMIC_FLAG_INIT;
 
-    void periodic_save();
+    void load_from_file();
 };
 
 extern MessageStore message_store;

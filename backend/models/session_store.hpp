@@ -58,6 +58,8 @@ class SessionStore
     std::string file_path;
     std::atomic<bool> stop_saving;
     std::thread save_thread;
+    std::atomic_flag is_saving = ATOMIC_FLAG_INIT;
+
     void load_from_file();
 };
 

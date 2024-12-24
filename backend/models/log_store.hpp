@@ -47,16 +47,16 @@ class LogStore
     void add_log(LogLevel level, const std::string &message);
     std::vector<LogEntry> get_logs(LogLevel level);
     void save_to_file();
-    void load_from_file();
 
   private:
     VectorType logs;
     std::string file_path;
     std::atomic<bool> stop_saving;
     std::thread save_thread;
+    std::atomic_flag is_saving = ATOMIC_FLAG_INIT;
     std::mutex save_mutex;
 
-    void periodic_save();
+    void load_from_file();
 };
 
 extern LogStore log_store;

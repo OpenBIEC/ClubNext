@@ -1,4 +1,5 @@
 #include "models/post_store.hpp"
+#include "config.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -8,7 +9,7 @@ PostStore::PostStore(const std::string &file_path) : file_path(file_path), stop_
     save_thread = std::thread([this]() {
         while (!stop_saving.load())
         {
-            std::this_thread::sleep_for(std::chrono::minutes(1));
+            std::this_thread::sleep_for(std::chrono::seconds(config.PERIODIC_SAVE));
             save_to_file();
         }
     });
@@ -68,6 +69,11 @@ bool PostStore::get_acc(int id, MapType::accessor &acc)
 
 void PostStore::save_to_file()
 {
+    if (is_saving.test_and_set())
+    {
+        return;
+    }
+
     try
     {
         json json_data = json::array();

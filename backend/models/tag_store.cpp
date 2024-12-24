@@ -1,4 +1,5 @@
 #include "models/tag_store.hpp"
+#include "config.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -8,7 +9,7 @@ TagStore::TagStore(const std::string &file_path) : file_path(file_path), stop_sa
     save_thread = std::thread([this]() {
         while (!stop_saving.load())
         {
-            std::this_thread::sleep_for(std::chrono::minutes(1));
+            std::this_thread::sleep_for(std::chrono::seconds(config.PERIODIC_SAVE));
             save_to_file();
         }
     });
@@ -48,6 +49,11 @@ bool TagStore::get_tag(int id, Tag &tag)
 
 void TagStore::save_to_file()
 {
+    if (is_saving.test_and_set())
+    {
+        return;
+    }
+
     try
     {
         json json_data = json::array();

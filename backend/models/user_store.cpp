@@ -6,14 +6,13 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-
 UserStore::UserStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {
     load_from_file();
     save_thread = std::thread([this]() {
         while (!stop_saving.load())
         {
-            std::this_thread::sleep_for(std::chrono::minutes(1));
+            std::this_thread::sleep_for(std::chrono::seconds(config.PERIODIC_SAVE));
             save_to_file();
         }
     });
@@ -170,6 +169,11 @@ void UserStore::unfollowing_user(const std::string &username, const std::string 
 
 void UserStore::save_to_file()
 {
+    if (is_saving.test_and_set())
+    {
+        return;
+    }
+
     try
     {
         json json_data = json::array();
