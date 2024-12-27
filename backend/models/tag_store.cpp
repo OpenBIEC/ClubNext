@@ -9,7 +9,7 @@ TagStore::TagStore(const std::string &file_path) : file_path(file_path), stop_sa
     save_thread = std::thread([this]() {
         while (!stop_saving.load())
         {
-            std::this_thread::sleep_for(std::chrono::seconds(config.PERIODIC_SAVE));
+            std::this_thread::sleep_for(std::chrono::seconds(config.PERIODIC_SAVE_DURATION));
             save_to_file();
         }
     });

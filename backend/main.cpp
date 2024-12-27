@@ -95,6 +95,15 @@ int main()
     server.Delete(R"(/api/forum/post/(\d+)/comment/(\d+))", handle_delete_comment);
     server.Post(R"(/api/forum/post/(\d+)/comment/(\d+)/media)", handle_upload_comment_media);
 
+    /*
+    server.Get("/api/draft", handle_get_drafts);
+    server.Post("/api/draft", handle_create_draft);
+    server.Put("/api/draft", handle_edit_draft);
+    server.Delete("/api/draft", handle_delete_draft);
+    server.Post("/api/draft/media", handle_upload_draft_media);
+    server.Post("/api/draft/publish", handle_publish_draft);
+    //*/
+
     std::cout << "Server running at http://0.0.0.0:8888" << std::endl;
 
     server.listen("0.0.0.0", 8888);
