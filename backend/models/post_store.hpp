@@ -121,6 +121,7 @@ class PostStore
     std::atomic<bool> stop_saving;
     std::thread save_thread;
     std::atomic_flag is_saving = ATOMIC_FLAG_INIT;
+    std::atomic<size_t> draft_count{0};
 
     void load_from_file();
 };

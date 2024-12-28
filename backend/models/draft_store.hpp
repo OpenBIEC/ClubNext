@@ -1,6 +1,7 @@
 #ifndef MODELS_DRAFT_STORE_HPP
 #define MODELS_DRAFT_STORE_HPP
 
+#include <atomic>
 #include <ctime>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -12,52 +13,79 @@ using json = nlohmann::json;
 
 struct Draft
 {
-    int draft_id;
+    int id;
     std::string author;
     std::string content;
-    std::vector<std::string> media_paths;
+    std::vector<std::string> media;
     std::time_t timestamp;
+
+    Draft() = default;
+    Draft(int draftId, std::string authorId, const std::string &draftContent)
+        : id(draftId), author(authorId), content(draftContent), timestamp(std::time(nullptr))
+    {
+    }
+
+    Draft(const Draft &other)
+        : id(other.id), author(other.author), content(other.content), media(other.media), timestamp(other.timestamp)
+    {
+    }
+
+    Draft &operator=(const Draft &other)
+    {
+        if (this == &other)
+            return *this;
+
+        id = other.id;
+        author = other.author;
+        content = other.content;
+        media = other.media;
+        timestamp = other.timestamp;
+
+        return *this;
+    }
 
     json to_json() const
     {
-        return {{"draft_id", draft_id},
-                {"author", author},
-                {"content", content},
-                {"media_paths", media_paths},
-                {"timestamp", timestamp}};
+        return {{"id", id}, {"author", author}, {"content", content}, {"media", media}, {"timestamp", timestamp}};
     }
 
     static Draft from_json(const json &j)
     {
-        return {j["draft_id"].get<int>(), j["author"].get<std::string>(), j["content"].get<std::string>(),
-                j["media_paths"].get<std::vector<std::string>>(), j["timestamp"].get<std::time_t>()};
+        Draft draft;
+        draft.id = j["id"].get<int>();
+        draft.author = j["author"].get<std::string>();
+        draft.content = j["content"].get<std::string>();
+        draft.media = j["media"].get<std::vector<std::string>>();
+        draft.timestamp = j["timestamp"].get<std::time_t>();
+        return draft;
     }
 };
 
 class DraftStore
 {
   public:
-    using VectorType = tbb::concurrent_vector<Draft>;
-    using MapType = tbb::concurrent_hash_map<std::string, VectorType>;
+    using DraftMapType = tbb::concurrent_hash_map<int, Draft>;
+    using UserMapType = tbb::concurrent_hash_map<std::string, DraftMapType>;
 
-    DraftStore();
+    DraftStore(const std::string &file_path);
     ~DraftStore();
 
     bool add_draft(const std::string &username, const Draft &draft);
-    bool edit_draft(const std::string &username, int draft_id, const std::string &new_content);
-    bool delete_draft(const std::string &username, int draft_id);
-    bool add_media_to_draft(const std::string &username, int draft_id, const std::string &media_path);
-    std::vector<Draft> get_drafts(const std::string &username);
-
+    bool get_draft(const std::string &username, int id, Draft &draft);
+    bool set_draft(const std::string &username, int id, const Draft &draft);
+    bool delete_draft(const std::string &username, int id);
     void save_to_file();
-    void load_from_file();
+
+    UserMapType &get_all_drafts();
 
   private:
-    MapType drafts;
+    UserMapType drafts;
     std::string file_path;
+    std::atomic<bool> stop_saving;
+    std::thread save_thread;
+    std::atomic_flag is_saving = ATOMIC_FLAG_INIT;
 
-    std::string get_draft_directory(const std::string &username);
-    std::string get_draft_media_path(int draft_id);
+    void load_from_file();
 };
 
 extern DraftStore draft_store;
