@@ -20,7 +20,7 @@ void handle_get_drafts(const httplib::Request &req, httplib::Response &res)
     }
 
     DraftStore::UserMapType::const_accessor user_acc;
-    if (!draft_store.get_all_drafts().find(user_acc, username))
+    if (!draft_store.get_drafts().find(user_acc, username))
     {
         log_store.add_log(LogLevel::WARNING_LOG, "No drafts found for user: " + username);
         res.status = 404;
@@ -59,7 +59,7 @@ void handle_create_draft(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    Draft new_draft(static_cast<int>(std::time(nullptr)), username, body["content"].get<std::string>());
+    Draft new_draft(draft_store.draft_count.fetch_add(1), username, body["content"].get<std::string>());
     draft_store.add_draft(username, new_draft);
 
     log_store.add_log(LogLevel::INFO_LOG, "Draft created successfully for user: " + username);

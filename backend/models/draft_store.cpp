@@ -124,7 +124,7 @@ void DraftStore::load_from_file()
     }
 }
 
-DraftStore::UserMapType &DraftStore::get_all_drafts()
+DraftStore::UserMapType &DraftStore::get_drafts()
 {
     return drafts;
 }

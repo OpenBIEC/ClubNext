@@ -115,13 +115,14 @@ class PostStore
 
     MapType &get_posts();
 
+    std::atomic<size_t> post_count{0};
+
   private:
     MapType posts;
     std::string file_path;
     std::atomic<bool> stop_saving;
     std::thread save_thread;
     std::atomic_flag is_saving = ATOMIC_FLAG_INIT;
-    std::atomic<size_t> draft_count{0};
 
     void load_from_file();
 };

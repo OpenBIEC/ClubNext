@@ -76,7 +76,9 @@ class DraftStore
     bool delete_draft(const std::string &username, int id);
     void save_to_file();
 
-    UserMapType &get_all_drafts();
+    UserMapType &get_drafts();
+
+    std::atomic<size_t> draft_count{0};
 
   private:
     UserMapType drafts;
