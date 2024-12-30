@@ -178,7 +178,7 @@ void handle_publish_draft(const httplib::Request &req, httplib::Response &res)
     }
 
     Post new_post;
-    new_post.id = static_cast<int>(std::time(nullptr));
+    new_post.id = ++post_store.post_count;
     new_post.author = draft.author;
     new_post.content = draft.content;
     new_post.media = draft.media;

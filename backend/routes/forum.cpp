@@ -24,7 +24,6 @@ void create_post(const httplib::Request &req, httplib::Response &res)
         return;
     }
 
-    static int post_id_counter = 0;
     json body = json::parse(req.body, nullptr, false);
     if (body.is_discarded() || !body.contains("content"))
     {
@@ -35,7 +34,7 @@ void create_post(const httplib::Request &req, httplib::Response &res)
     }
 
     std::string content = body["content"].get<std::string>();
-    int post_id = ++post_id_counter;
+    int post_id = ++post_store.post_count;
 
     std::string post_dir = config.POST_DIR + std::to_string(post_id) + "/";
     std::string content_file_path = post_dir + "content.md";

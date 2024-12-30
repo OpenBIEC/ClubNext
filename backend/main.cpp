@@ -1,5 +1,6 @@
 #include "config.hpp"
 #include "models/comment_store.hpp"
+#include "models/draft_store.hpp"
 #include "models/log_store.hpp"
 #include "models/message_store.hpp"
 #include "models/post_store.hpp"
@@ -35,6 +36,7 @@ PostStore post_store("posts_store.json");
 TagStore tag_store("tags_store.json");
 MessageStore message_store("message_store.json");
 LogStore log_store("log_store.json");
+DraftStore draft_store("draft_store.json");
 CommentStore comment_store;
 
 void signal_handler(int signal)
@@ -45,6 +47,7 @@ void signal_handler(int signal)
         log_store.save_to_file();
         user_store.save_to_file();
         post_store.save_to_file();
+        draft_store.save_to_file();
         tag_store.save_to_file();
         message_store.save_to_file();
         comment_store.save_to_file();

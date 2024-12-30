@@ -1,17 +1,28 @@
 #include "models/draft_store.hpp"
-#include <filesystem>
+#include "config.hpp"
+#include <cstddef>
 #include <fstream>
-#include <stdexcept>
+#include <iostream>
 
-namespace fs = std::filesystem;
-
-DraftStore::DraftStore(const std::string &file_path) : file_path(file_path)
+DraftStore::DraftStore(const std::string &file_path) : file_path(file_path), stop_saving(false)
 {
     load_from_file();
+    save_thread = std::thread([this]() {
+        while (!stop_saving.load())
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(config.PERIODIC_SAVE_DURATION));
+            save_to_file();
+        }
+    });
 }
 
 DraftStore::~DraftStore()
 {
+    stop_saving.store(true);
+    if (save_thread.joinable())
+    {
+        save_thread.join();
+    }
     save_to_file();
 }
 
@@ -74,53 +85,54 @@ bool DraftStore::delete_draft(const std::string &username, int id)
 
 void DraftStore::save_to_file()
 {
-    std::ofstream file(file_path);
-    if (!file.is_open())
-    {
-        throw std::runtime_error("Unable to open draft store file for saving.");
-    }
-
-    json j;
-    for (const auto &[username, user_drafts] : drafts)
-    {
-        json draft_map = json::object();
-        for (const auto &[draft_id, draft] : user_drafts)
-        {
-            draft_map[std::to_string(draft_id)] = draft.to_json();
-        }
-        j[username] = draft_map;
-    }
-
-    file << j.dump(4);
-    file.close();
-}
-
-void DraftStore::load_from_file()
-{
-    if (!fs::exists(file_path))
+    if (is_saving.test_and_set())
     {
         return;
     }
 
-    std::ifstream file(file_path);
-    if (!file.is_open())
+    try
     {
-        throw std::runtime_error("Unable to open draft store file for loading.");
-    }
-
-    json j;
-    file >> j;
-    file.close();
-
-    for (const auto &[username, draft_map] : j.items())
-    {
-        DraftMapType user_drafts;
-        for (const auto &[draft_id_str, draft_json] : draft_map.items())
+        json json_data = json::array();
+        for (const auto &[username, user_drafts] : drafts)
         {
-            Draft draft = Draft::from_json(draft_json);
-            user_drafts.insert({std::stoi(draft_id_str), draft});
+            for (const auto &item : user_drafts)
+            {
+                json_data.push_back(item.second.to_json());
+            }
         }
-        drafts.insert({username, user_drafts});
+        json j = {{"drafts", json_data}, {"count", draft_count.load()}};
+        std::ofstream file(file_path, std::ios::out | std::ios::trunc);
+        file << j.dump(4);
+        file.close();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error saving draft store to file: " << e.what() << std::endl;
+    }
+}
+
+void DraftStore::load_from_file()
+{
+    try
+    {
+        std::ifstream file(file_path);
+        if (file.is_open())
+        {
+            json j;
+            file >> j;
+            draft_count = j["count"].get<size_t>();
+            json json_data = j["drafts"];
+            for (const auto &item : json_data)
+            {
+                Draft draft = Draft::from_json(item);
+                add_draft(draft.author, draft);
+            }
+            file.close();
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error loading post store from file: " << e.what() << std::endl;
     }
 }
 

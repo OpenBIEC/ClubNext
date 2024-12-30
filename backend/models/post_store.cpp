@@ -81,8 +81,9 @@ void PostStore::save_to_file()
         {
             json_data.push_back(item.second.to_json());
         }
+        json j = {{"posts", json_data}, {"count", post_count.load()}};
         std::ofstream file(file_path, std::ios::out | std::ios::trunc);
-        file << json_data.dump(4);
+        file << j.dump(4);
         file.close();
     }
     catch (const std::exception &e)
@@ -98,8 +99,10 @@ void PostStore::load_from_file()
         std::ifstream file(file_path);
         if (file.is_open())
         {
-            json json_data;
-            file >> json_data;
+            json j;
+            file >> j;
+            post_count = j["count"].get<size_t>();
+            json json_data = j["posts"];
             for (const auto &item : json_data)
             {
                 Post post = Post::from_json(item);
