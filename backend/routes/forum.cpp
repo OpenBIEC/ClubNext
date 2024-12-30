@@ -12,7 +12,7 @@
 
 using json = nlohmann::json;
 
-void create_post(const httplib::Request &req, httplib::Response &res)
+void handle_create_post(const httplib::Request &req, httplib::Response &res)
 {
     log_store.add_log(LogLevel::INFO_LOG, "Processing create post request");
     std::string username;
@@ -36,8 +36,8 @@ void create_post(const httplib::Request &req, httplib::Response &res)
     std::string content = body["content"].get<std::string>();
     int post_id = ++post_store.post_count;
 
-    std::string post_dir = config.POST_DIR + std::to_string(post_id) + "/";
-    std::string content_file_path = post_dir + "content.md";
+    std::string post_dir = config.POST_DIR + std::to_string(post_id);
+    std::string content_file_path = post_dir + "/" + "content.md";
 
     if (!std::filesystem::create_directories(post_dir))
     {
@@ -64,7 +64,7 @@ void create_post(const httplib::Request &req, httplib::Response &res)
     res.set_content(json{{"message", "Post created successfully"}, {"post_id", post_id}}.dump(), "application/json");
 }
 
-void modify_post(const httplib::Request &req, httplib::Response &res)
+void handle_modify_post(const httplib::Request &req, httplib::Response &res)
 {
     log_store.add_log(LogLevel::INFO_LOG, "Processing modify post request");
     std::string username;
@@ -127,7 +127,7 @@ void modify_post(const httplib::Request &req, httplib::Response &res)
     res.set_content(json{{"message", "Post modified successfully"}, {"post_id", post_id}}.dump(), "application/json");
 }
 
-void upload_media(const httplib::Request &req, httplib::Response &res)
+void handle_upload_post_media(const httplib::Request &req, httplib::Response &res)
 {
     log_store.add_log(LogLevel::INFO_LOG, "Processing upload media request");
     std::string username;
@@ -196,7 +196,7 @@ void upload_media(const httplib::Request &req, httplib::Response &res)
     res.set_content("{\"message\":\"Media uploaded successfully\"}", "application/json");
 }
 
-void get_post_detail(const httplib::Request &req, httplib::Response &res)
+void handle_get_post_detail(const httplib::Request &req, httplib::Response &res)
 {
     log_store.add_log(LogLevel::INFO_LOG, "Processing get post detail request");
     int post_id = std::stoi(req.matches[1]);
@@ -214,7 +214,7 @@ void get_post_detail(const httplib::Request &req, httplib::Response &res)
     res.set_content(post.to_json().dump(), "application/json");
 }
 
-void add_tags_to_post(const httplib::Request &req, httplib::Response &res)
+void handle_add_tags_to_post(const httplib::Request &req, httplib::Response &res)
 {
     log_store.add_log(LogLevel::INFO_LOG, "Processing add tags to post request");
     std::string username;
@@ -273,7 +273,7 @@ void add_tags_to_post(const httplib::Request &req, httplib::Response &res)
     res.set_content("{\"message\":\"Tags added successfully\"}", "application/json");
 }
 
-void get_recommend_posts(const httplib::Request &req, httplib::Response &res)
+void handle_get_recommend_posts(const httplib::Request &req, httplib::Response &res)
 {
     log_store.add_log(LogLevel::INFO_LOG, "Processing get recommended posts request");
     std::string username;
@@ -314,7 +314,7 @@ void get_recommend_posts(const httplib::Request &req, httplib::Response &res)
     }
 }
 
-void get_tags(const httplib::Request &, httplib::Response &res)
+void handle_get_tags(const httplib::Request &, httplib::Response &res)
 {
     log_store.add_log(LogLevel::INFO_LOG, "Processing get tags request");
     auto &tags = tag_store.get_tags();

@@ -8,6 +8,7 @@
 #include "models/tag_store.hpp"
 #include "models/user_store.hpp"
 #include "routes/comment.hpp"
+#include "routes/draft.hpp"
 #include "routes/forum.hpp"
 #include "routes/message.hpp"
 #include "routes/social.hpp"
@@ -20,7 +21,7 @@
 
 Config config;
 
-SessionStore session_store("session_store.json");
+SessionStore session_store(config.SESSION_STORE);
 
 void session_cleanup_task()
 {
@@ -31,12 +32,12 @@ void session_cleanup_task()
     }
 }
 
-UserStore user_store("user_store.json");
-PostStore post_store("posts_store.json");
-TagStore tag_store("tags_store.json");
-MessageStore message_store("message_store.json");
-LogStore log_store("log_store.json");
-DraftStore draft_store("draft_store.json");
+UserStore user_store(config.USER_STORE);
+PostStore post_store(config.POST_STORE);
+TagStore tag_store(config.TAG_STORE);
+MessageStore message_store(config.MESSAGE_STORE);
+LogStore log_store(config.LOG_STORE);
+DraftStore draft_store(config.DRAFT_STORE);
 CommentStore comment_store;
 
 void signal_handler(int signal)
@@ -77,12 +78,12 @@ int main()
     server.Get("/api/user/verify", send_verify_email);
     server.Get("/api/user/validate", verify_user_email);
 
-    server.Get(R"(/api/forum/post/(\d+))", get_post_detail);
-    server.Post("/api/forum/post", create_post);
-    server.Post(R"(/api/forum/post/(\d+)/media)", upload_media);
-    server.Get("/api/forum/recommend", get_recommend_posts);
-    server.Get("/api/tags", get_tags);
-    server.Post(R"(/api/forum/post/(\d+)/tags)", add_tags_to_post);
+    server.Get(R"(/api/forum/post/(\d+))", handle_get_post_detail);
+    server.Post("/api/forum/post", handle_create_post);
+    server.Post(R"(/api/forum/post/(\d+)/media)", handle_upload_post_media);
+    server.Get("/api/forum/recommend", handle_get_recommend_posts);
+    server.Get("/api/tags", handle_get_tags);
+    server.Post(R"(/api/forum/post/(\d+)/tags)", handle_add_tags_to_post);
 
     server.Post(R"(/api/user/(\w+)/follow)", handle_follow_user);
     server.Delete(R"(/api/user/(\w+)/unfollow)", handle_unfollow_user);
@@ -98,14 +99,12 @@ int main()
     server.Delete(R"(/api/forum/post/(\d+)/comment/(\d+))", handle_delete_comment);
     server.Post(R"(/api/forum/post/(\d+)/comment/(\d+)/media)", handle_upload_comment_media);
 
-    /*
     server.Get("/api/draft", handle_get_drafts);
     server.Post("/api/draft", handle_create_draft);
     server.Put("/api/draft", handle_edit_draft);
     server.Delete("/api/draft", handle_delete_draft);
     server.Post("/api/draft/media", handle_upload_draft_media);
     server.Post("/api/draft/publish", handle_publish_draft);
-    //*/
 
     std::cout << "Server running at http://0.0.0.0:8888" << std::endl;
 

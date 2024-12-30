@@ -8,6 +8,15 @@ struct Config
 {
     const std::string BASE_URL = "http://example.com";
 
+    const std::string USER_STORE = "user_store.json";
+    const std::string POST_STORE = "post_store.json";
+    const std::string SESSION_STORE = "session_store.json";
+    const std::string TAG_STORE = "tag_store.json";
+    const std::string MESSAGE_STORE = "message_store.json";
+    const std::string LOG_STORE = "log_store.json";
+    const std::string DRAFT_STORE = "draft_store.json";
+    const std::string COMMENT_STORE = "comment_store.json";
+
     const std::string STATIC_DIR = "./../../../../frontend/";
     const std::string USER_DIR = "./users/";
     const std::string POST_DIR = "./posts/";

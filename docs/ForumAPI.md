@@ -1,24 +1,30 @@
-# 基础论坛API
+# API Documentation
 
-## 用户相关 API
+## Overview
 
-### 1. **用户注册**
+This document provides a comprehensive overview of the available API endpoints grouped by functionality.
 
-- **方法**: `POST`
-- **路径**: `/api/user/register`
-- **描述**: 注册新账号。
-- **请求体**:
+---
+
+## User Management
+
+### 1. **User Registration**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/user/register`
+- **Description**: Register a new user account.
+- **Request Body**:
 
   ```json
   {
     "username": "string",
-    "email":"string",
+    "email": "string",
     "password": "string"
   }
   ```
 
-- **响应**:
-  - 成功：
+- **Responses**:
+  - Success:
 
     ```json
     {
@@ -26,7 +32,7 @@
     }
     ```
 
-  - 错误：
+  - Error:
 
     ```json
     {
@@ -34,25 +40,23 @@
     }
     ```
 
----
+### 2. **User Login**
 
-### 2. **用户登录**
-
-- **方法**: `POST`
-- **路径**: `/api/user/login`
-- **描述**: 登录并获取会话 cookie。
-- **请求体**:
+- **Method**: `POST`
+- **Endpoint**: `/api/user/login`
+- **Description**: Log in and retrieve session cookies.
+- **Request Body**:
 
   ```json
   {
     "username": "string",
     "password": "string",
-    "remember_me": "any" // Optional
+    "remember_me": "boolean" // Optional
   }
   ```
 
-- **响应**:
-  - 成功：
+- **Responses**:
+  - Success:
 
     ```json
     {
@@ -60,23 +64,20 @@
     }
     ```
 
-  - 错误：
+  - Error:
 
     ```json
-
     {
       "error": "Invalid credentials"
     }
     ```
 
----
+### 3. **Get Current User Profile**
 
-### 3. **获取当前用户信息**
-
-- **方法**: `GET`
-- **路径**: `/api/user/profile`
-- **描述**: 获取当前登录用户的信息。
-- **响应**:
+- **Method**: `GET`
+- **Endpoint**: `/api/user/profile`
+- **Description**: Retrieve the profile of the currently logged-in user.
+- **Response**:
 
   ```json
   {
@@ -89,45 +90,37 @@
   }
   ```
 
----
+### 4. **Update User Profile**
 
-### 4. **更改用户个人资料 API**
-
-**方法**: `POST`  
-**路径**: `/api/user/profile/update`  
-**描述**: 更新当前登录用户的个人资料。  
-
-**请求体**:
-
-```json
-{
-  "bio": "string",
-  "avatar_url": "string"
-}
-```
-
-**响应**:
-
-- **成功**:
+- **Method**: `POST`
+- **Endpoint**: `/api/user/profile/update`
+- **Description**: Update the profile of the currently logged-in user.
+- **Request Body**:
 
   ```json
   {
-    "message": "Profile updated successfully",
-    "token": "<TOKEN>"
+    "bio": "string",
+    "avatar_url": "string"
   }
   ```
 
----
+- **Response**:
 
-### 5. **上传/更新头像**
+  ```json
+  {
+    "message": "Profile updated successfully"
+  }
+  ```
 
-- **方法**: `POST`
-- **路径**: `/api/user/avatar`
-- **描述**: 上传或更新用户头像。
-- **请求体**:
+### 5. **Upload/Update Avatar**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/user/avatar`
+- **Description**: Upload or update the user's avatar.
+- **Request Body**:
   - `Content-Type`: `multipart/form-data`
-  - 文件字段名: `avatar`
-- **响应**:
+  - Field Name: `avatar`
+- **Response**:
 
   ```json
   {
@@ -135,82 +128,48 @@
   }
   ```
 
----
+### 6. **Send Verification Code**
 
-### 6. **获取陌生用户的基础资料**
-
-- **方法**: `GET`
-- **路径**: `/api/user/{user_id}/profile`
-- **描述**: 根据用户 ID 获取基础资料。
-- **响应**:
+- **Method**: `GET`
+- **Endpoint**: `/api/user/verify`
+- **Description**: Send a verification code to the user's email.
+- **Query Parameters**:
+  - `username`: `string` (Required)
+  - `email`: `string` (Required)
+- **Response**:
 
   ```json
   {
-    "username": "string",
-    "bio": "string",
-    "avatar": "url",
-    "followers": "int",
-    "followings": "int",
-    "joined_at": "datetime"
+    "message": "Verification code sent successfully"
+  }
+  ```
+
+### 7. **Validate Verification Code**
+
+- **Method**: `GET`
+- **Endpoint**: `/api/user/validate`
+- **Description**: Validate the provided verification code.
+- **Query Parameters**:
+  - `username`: `string` (Required)
+  - `code`: `string` (Required)
+- **Response**:
+
+  ```json
+  {
+    "message": "Verification successful"
   }
   ```
 
 ---
 
-### 7. **发送验证码**
+## Forum Post Management
 
-- **URL**: `/api/user/verify`
-- **方法**: `GET`
-- **描述**: 发送验证码到指定的用户邮箱。
+### 1. **Get Post Details**
 
-- **请求参数**
-
-| 参数名   | 类型     | 是否必填 | 描述             |
-|----------|----------|----------|------------------|
-| `username`  | `string` | 必填     | 用户名。 |
-| `email`  | `string` | 必填     | 用户接收验证码的邮箱地址。 |
-
-- **响应**
-
-```json
-{
-    "message": "Verification code sent successfully"
-}
-```
-
----
-
-### 8. **验证验证码**
-
-- **URL**: `/api/user/validate`
-- **方法**: `GET`
-- **描述**: 验证用户输入的验证码是否正确。
-
-- **请求参数**
-
-| 参数名   | 类型     | 是否必填 | 描述                  |
-|----------|----------|----------|-----------------------|
-| `username`  | `string` | 必填     | 用户名。 |
-| `code`   | `string` | 必填     | 用户输入的验证码。      |
-
-- **响应**
-
-```json
-{
-    "message": "Verification successful"
-}
-```
-
----
-
-## 帖子相关 API
-
-### 1. **获取帖子详情**
-
-- **方法**: `GET`
-- **路径**: `/api/forum/post/{post_id}`
-- **描述**: 获取指定帖子的详情。
-- **响应**:
+- **Method**: `GET`
+- **Endpoint**: `/api/forum/post/{post_id}`
+- **Description**: Retrieve details of a specific post.
+- **Response**:
 
   ```json
   {
@@ -224,14 +183,12 @@
   }
   ```
 
----
+### 2. **Create New Post**
 
-### 2. **发布新帖子**
-
-- **方法**: `POST`
-- **路径**: `/api/forum/post`
-- **描述**: 创建新帖子。
-- **请求体**:
+- **Method**: `POST`
+- **Endpoint**: `/api/forum/post`
+- **Description**: Create a new forum post.
+- **Request Body**:
 
   ```json
   {
@@ -240,7 +197,7 @@
   }
   ```
 
-- **响应**:
+- **Response**:
 
   ```json
   {
@@ -249,42 +206,15 @@
   }
   ```
 
----
+### 3. **Upload Post Media**
 
-### 3. **修改帖子**
-
-- **方法**: `POST`
-- **路径**: `/api/forum/post/{post_id}`
-- **描述**: 创建新帖子。
-- **请求体**:
-
-  ```json
-  {
-    "title": "string",
-    "content": "string"
-  }
-  ```
-
-- **响应**:
-
-  ```json
-  {
-    "message": "Post created successfully",
-    "post_id": "int"
-  }
-  ```
-
----
-
-### 4. **上传帖子媒体**
-
-- **方法**: `POST`
-- **路径**: `/api/forum/post/{post_id}/media`
-- **描述**: 上传指定帖子的媒体文件。
-- **请求体**:
+- **Method**: `POST`
+- **Endpoint**: `/api/forum/post/{post_id}/media`
+- **Description**: Upload media files for a specific post.
+- **Request Body**:
   - `Content-Type`: `multipart/form-data`
-  - 文件字段名: `media`
-- **响应**:
+  - Field Name: `media`
+- **Response**:
 
   ```json
   {
@@ -292,226 +222,32 @@
   }
   ```
 
----
+### 4. **Get Recommended Posts**
 
-### 5. **获取推荐帖子**
-
-- **方法**: `GET`
-- **路径**: `/api/forum/recommend`
-- **描述**: 返回最多 10 个推荐帖子的 ID。
-- **响应**:
+- **Method**: `GET`
+- **Endpoint**: `/api/forum/recommend`
+- **Description**: Retrieve a list of recommended posts.
+- **Response**:
 
   ```json
   {
     "recommended_posts": [
       { "id": "int" },
-      { "id": "int" },
-      ...
+      { "id": "int" }
     ]
   }
   ```
 
 ---
 
-## 标签相关 API
+## Comments Management
 
-### 1. **获取标签列表**
+### 1. **Get Post Comments**
 
-- **方法**: `GET`
-- **路径**: `/api/tags`
-- **描述**: 获取所有可用标签的列表。
-- **响应**:
-
-  ```json
-  {
-    "tags": [
-      {
-        "id": "int",
-        "name": "string"
-      },
-      ...
-    ]
-  }
-  ```
-
----
-
-### 2. **获取帖子的标签**
-
-- **方法**: `GET`
-- **路径**: `/api/forum/post/{post_id}/tags`
-- **描述**: 获取指定帖子的标签列表。
-- **响应**:
-
-  ```json
-  {
-    "post_id": "int",
-    "tags": [
-      {
-        "id": "int",
-        "name": "string"
-      },
-      ...
-    ]
-  }
-  ```
-
----
-
-### 3. **给帖子添加标签**
-
-- **方法**: `POST`
-- **路径**: `/api/forum/post/{post_id}/tags`
-- **描述**: 为指定帖子添加标签（需登录）。
-- **请求体**:
-
-  ```json
-  {
-    "tags": [
-      { "id": "int" },
-      { "id": "int" },
-      ...
-    ]
-  }
-  ```
-
-- **响应**:
-  - 成功：
-
-    ```json
-    {
-      "message": "Tags added successfully"
-    }
-    ```
-
-  - 错误：
-
-    ```json
-    {
-      "error": "Tag does not exist"
-    }
-    ```
-
----
-
-## 私信相关 API
-
-### 1. **获取私信列表**
-
-- **方法**: `GET`
-- **路径**: `/api/message/inbox`
-- **描述**: 获取当前用户的私信列表。
-- **响应**:
-
-  ```json
-  {
-    "messages": [
-      {
-        "sender_id": "string",
-        "content": "string",
-        "timestamp": "datetime"
-      },
-      ...
-    ]
-  }
-  ```
-
----
-
-### 2. **发送私信**
-
-- **方法**: `POST`
-- **路径**: `/api/message/send`
-- **描述**: 向指定用户发送私信。
-- **请求体**:
-
-  ```json
-  {
-    "recipient_id": "string",
-    "content": "string"
-  }
-  ```
-
-- **响应**:
-
-  ```json
-  {
-    "message": "Message sent successfully"
-  }
-  ```
-
----
-
-## 社交功能 API
-
-### 1. **关注用户**
-
-- **方法**: `POST`
-- **路径**: `/api/user/{user_id}/follow`
-- **描述**: 关注指定用户。
-- **响应**:
-
-  ```json
-  {
-    "message": "Followed successfully"
-  }
-  ```
-
----
-
-### 2. **取消关注用户**
-
-- **方法**: `DELETE`
-- **路径**: `/api/user/{user_id}/unfollow`
-- **描述**: 取消关注指定用户。
-- **响应**:
-
-  ```json
-  {
-    "message": "Unfollowed successfully"
-  }
-  ```
-
----
-
-### 3. **点赞帖子**
-
-- **方法**: `POST`
-- **路径**: `/api/forum/post/{post_id}/like`
-- **描述**: 点赞帖子。
-- **响应**:
-
-  ```json
-  {
-    "message": "Post liked successfully"
-  }
-  ```
-
----
-
-### 4. **取消点赞**
-
-- **方法**: `DELETE`
-- **路径**: `/api/forum/post/{post_id}/like`
-- **描述**: 取消点赞帖子。
-- **响应**:
-
-  ```json
-  {
-    "message": "Post unliked successfully"
-  }
-  ```
-
----
-
-## **评论功能 API**
-
-### 1. **获取帖子评论列表**
-
-- **方法**: `GET`
-- **路径**: `/api/forum/post/{post_id}/comments`
-- **描述**: 获取指定帖子的评论列表。
-- **响应**:
+- **Method**: `GET`
+- **Endpoint**: `/api/forum/post/{post_id}/comments`
+- **Description**: Retrieve the list of comments for a specific post.
+- **Response**:
 
   ```json
   {
@@ -522,20 +258,17 @@
         "author": "string",
         "content": "string",
         "timestamp": "datetime"
-      },
-      ...
+      }
     ]
   }
   ```
 
----
+### 2. **Post a Comment**
 
-### 2. **发布评论**
-
-- **方法**: `POST`
-- **路径**: `/api/forum/post/{post_id}/comments`
-- **描述**: 在指定帖子下发布评论。
-- **请求体**:
+- **Method**: `POST`
+- **Endpoint**: `/api/forum/post/{post_id}/comments`
+- **Description**: Add a comment to a specific post.
+- **Request Body**:
 
   ```json
   {
@@ -544,7 +277,7 @@
   }
   ```
 
-- **响应**:
+- **Response**:
 
   ```json
   {
@@ -553,14 +286,12 @@
   }
   ```
 
----
+### 3. **Edit a Comment**
 
-### 3. **编辑评论**
-
-- **方法**: `PUT`
-- **路径**: `/api/forum/post/{post_id}/comment/{comment_id}`
-- **描述**: 编辑已发布的评论。
-- **请求体**:
+- **Method**: `PUT`
+- **Endpoint**: `/api/forum/post/{post_id}/comment/{comment_id}`
+- **Description**: Edit an existing comment.
+- **Request Body**:
 
   ```json
   {
@@ -568,7 +299,7 @@
   }
   ```
 
-- **响应**:
+- **Response**:
 
   ```json
   {
@@ -576,14 +307,12 @@
   }
   ```
 
----
+### 4. **Delete a Comment**
 
-### 4. **删除评论**
-
-- **方法**: `DELETE`
-- **路径**: `/api/forum/post/{post_id}/comment/{comment_id}`
-- **描述**: 删除指定评论。
-- **响应**:
+- **Method**: `DELETE`
+- **Endpoint**: `/api/forum/post/{post_id}/comment/{comment_id}`
+- **Description**: Delete a specific comment.
+- **Response**:
 
   ```json
   {
@@ -591,20 +320,253 @@
   }
   ```
 
----
+### 5. **Upload Comment Media**
 
-### 5. **上传帖子媒体**
-
-- **方法**: `POST`
-- **路径**: `/api/forum/post/{post_id}/comment/{comment_id}/media`
-- **描述**: 上传指定帖子的指定评论的媒体文件。
-- **请求体**:
+- **Method**: `POST`
+- **Endpoint**: `/api/forum/post/{post_id}/comment/{comment_id}/media`
+- **Description**: Upload media files for a specific comment.
+- **Request Body**:
   - `Content-Type`: `multipart/form-data`
-  - 文件字段名: `media`
-- **响应**:
+  - Field Name: `media`
+- **Response**:
 
   ```json
   {
     "message": "Media uploaded successfully"
   }
   ```
+
+---
+
+## Messaging
+
+### 1. **Get Inbox**
+
+- **Method**: `GET`
+- **Endpoint**: `/api/message/inbox`
+- **Description**: Retrieve the inbox messages of the current user.
+- **Response**:
+
+  ```json
+  {
+    "messages": [
+      {
+        "sender_id": "string",
+        "content": "string",
+        "timestamp": "datetime"
+      }
+    ]
+  }
+  ```
+
+### 2. **Send a Message**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/message/send`
+- **Description**: Send a message to another user.
+- **Request Body**:
+
+  ```json
+  {
+    "recipient_id": "string",
+    "content": "string"
+  }
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "message": "Message sent successfully"
+  }
+  ```
+
+---
+
+## Social Features
+
+### 1. **Follow User**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/user/{user_id}/follow`
+- **Description**: Follow a specific user.
+- **Response**:
+
+  ```json
+  {
+    "message": "Followed successfully"
+  }
+  ```
+
+### 2. **Unfollow User**
+
+- **Method**: `DELETE`
+- **Endpoint**: `/api/user/{user_id}/unfollow`
+- **Description**: Unfollow a specific user.
+- **Response**:
+
+  ```json
+  {
+    "message": "Unfollowed successfully"
+  }
+  ```
+
+### 3. **Like Post**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/forum/post/{post_id}/like`
+- **Description**: Like a specific post.
+- **Response**:
+
+  ```json
+  {
+    "message": "Post liked successfully"
+  }
+  ```
+
+### 4. **Unlike Post**
+
+- **Method**: `DELETE`
+- **Endpoint**: `/api/forum/post/{post_id}/like`
+- **Description**: Remove like from a specific post.
+- **Response**:
+
+  ```json
+  {
+    "message": "Post unliked successfully"
+  }
+  ```
+
+---
+
+## Draft Management
+
+### 1. **Get Drafts**
+
+- **Method**: `GET`
+- **Endpoint**: `/api/draft`
+- **Description**: Retrieve the list of drafts for the current user.
+- **Response**:
+
+  ```json
+  {
+    "drafts": [
+      {
+        "id": "int",
+        "title": "string",
+        "content": "string",
+        "media": ["url"],
+        "timestamp": "datetime"
+      }
+    ]
+  }
+  ```
+
+### 2. **Create Draft**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/draft`
+- **Description**: Create a new draft.
+- **Request Body**:
+
+  ```json
+  {
+    "title": "string",
+    "content": "string",
+    "media": ["url"]
+  }
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "message": "Draft created successfully",
+    "draft_id": "int"
+  }
+  ```
+
+### 3. **Edit Draft**
+
+- **Method**: `PUT`
+- **Endpoint**: `/api/draft`
+- **Description**: Edit an existing draft.
+- **Request Body**:
+
+  ```json
+  {
+    "draft_id": "int",
+    "title": "string",
+    "content": "string",
+    "media": ["url"]
+  }
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "message": "Draft updated successfully"
+  }
+  ```
+
+### 4. **Delete Draft**
+
+- **Method**: `DELETE`
+- **Endpoint**: `/api/draft`
+- **Description**: Delete a specific draft.
+- **Request Body**:
+
+  ```json
+  {
+    "draft_id": "int"
+  }
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "message": "Draft deleted successfully"
+  }
+  ```
+
+### 5. **Upload Draft Media**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/draft/media`
+- **Description**: Upload media files for a draft.
+- **Request Body**:
+  - `Content-Type`: `multipart/form-data`
+  - Field Name: `media`
+- **Response**:
+
+  ```json
+  {
+    "message": "Media uploaded successfully"
+  }
+  ```
+
+### 6. **Publish Draft**
+
+- **Method**: `POST`
+- **Endpoint**: `/api/draft/publish`
+- **Description**: Publish a draft to create a post.
+- **Request Body**:
+
+  ```json
+  {
+    "draft_id": "int"
+  }
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "message": "Draft published successfully",
+    "post_id": "int"
+  }
+  ```
+
+---
