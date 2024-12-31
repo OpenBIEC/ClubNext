@@ -157,9 +157,6 @@
                                             <i class="bi bi-camera-video"></i> Video
                                             <input type="file" id="videoUpload" class="d-none" accept="video/*">
                                         </label>
-                                        <button id="addLinkButton" class="btn btn-outline-info">
-                                            <i class="bi bi-link-45deg"></i> Link
-                                        </button>
                                         <button id="postButton" class="btn btn-primary">
                                             <i class="bi bi-send"></i> Post
                                         </button>
@@ -168,9 +165,8 @@
                             </div>
                         </div>
                     </div>
-                                    
-                    
-                </div>
+                </div>                          
+
                 <div id="loadingIndicator" class="text-center mt-3">
                     <span class="spinner-border text-primary" role="status"></span>
                 </div>
@@ -382,97 +378,95 @@
         });
 
         document.addEventListener("DOMContentLoaded", async () => {
-            const userAvatar = document.getElementById("userAvatar");
             const postContent = document.getElementById("postContent");
             const imageUpload = document.getElementById("imageUpload");
             const fileUpload = document.getElementById("fileUpload");
             const videoUpload = document.getElementById("videoUpload");
             const postButton = document.getElementById("postButton");
-        
-            let userLoggedIn = false;
-            let currentPostId = null;
-        
-            try {
-                const profile = await fetchUserProfile();
-                if (profile && profile.avatar) {
-                    userLoggedIn = true;
-                    userAvatar.src = profile.avatar;
+            let currentDraftId = null;
+
+            async function autoCreateDraft(content) {
+                if (currentDraftId) return;
+                try {
+                    const response = await fetch('/api/draft', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ content: content || "" })
+                    });
+                    if (!response.ok) {
+                        throw new Error("Failed to create draft");
+                    }
+                    const data = await response.json();
+                    currentDraftId = data.draft_id;
+                } catch (error) {
+                    console.error("Error creating draft:", error);
                 }
-            } catch (error) {
-                console.warn("User not logged in:", error);
-                alert("You need to log in to create or edit posts.");
-                return;
             }
-        
-            async function createSamplePost(content) {
-                if (!userLoggedIn) {
-                    alert("You need to log in to create a post.");
-                    return null;
+
+            async function updateDraft(content) {
+                if (!currentDraftId) {
+                    await autoCreateDraft(content);
                 }
                 try {
-                    const response = await createPost(content || "Temporary post content.");
-                    currentPostId = response.post_id;
-                    return response;
+                    await fetch('/api/draft', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ draft_id: currentDraftId, content })
+                    });
                 } catch (error) {
-                    console.error("Error creating sample post:", error);
-                    alert("Failed to create a sample post. Please try again.");
-                    return null;
+                    console.error("Error updating draft:", error);
                 }
             }
-        
-            async function handleMediaUpload(file, type) {
-                if (!currentPostId) {
-                    await createSamplePost(postContent.value);
+
+            async function uploadMedia(file, type) {
+                if (!currentDraftId) {
+                    await autoCreateDraft(postContent.value);
                 }
-                if (!currentPostId) return;
-        
                 try {
-                    const response = await uploadMedia(currentPostId, file, type);
-                    const fileName = file.name;
-                    const link = `/post/${currentPostId}/${fileName}`;
-                    postContent.value += `[${fileName}](${link})\n`;
+                    const formData = new FormData();
+                    formData.append(type, file);
+                    await fetch(`/api/draft/media`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: formData
+                    });
                 } catch (error) {
-                    console.error("Error uploading media:", error);
-                    alert("Failed to upload media. Please try again.");
+                    console.error(`Error uploading ${type}:`, error);
                 }
             }
         
-            imageUpload.addEventListener("change", (event) => {
-                const file = event.target.files[0];
-                if (file) handleMediaUpload(file, "image");
-            });
-        
-            fileUpload.addEventListener("change", (event) => {
-                const file = event.target.files[0];
-                if (file) handleMediaUpload(file, "file");
-            });
-        
-            videoUpload.addEventListener("change", (event) => {
-                const file = event.target.files[0];
-                if (file) handleMediaUpload(file, "video");
-            });
-        
-            postButton.addEventListener("click", async () => {
-                if (!currentPostId) {
-                    alert("No post to update. Please create or upload media first.");
+            async function publishDraft() {
+                if (!currentDraftId) {
+                    alert("Please add content or media before publishing.");
                     return;
                 }
-        
-                const content = postContent.value.trim();
-                if (!content) {
-                    alert("Post content cannot be empty!");
-                    return;
-                }
-        
                 try {
-                    await updatePost(currentPostId, content);
-                    alert("Post successfully updated!");
+                    const response = await fetch('/api/draft/publish', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ draft_id: currentDraftId })
+                    });
+                    if (!response.ok) {
+                        throw new Error("Failed to publish draft");
+                    }
+                    alert("Post published successfully!");
+                    currentDraftId = null;
                 } catch (error) {
-                    console.error("Error updating post:", error);
-                    alert("Failed to update post. Please try again.");
+                    console.error("Error publishing draft:", error);
+                    alert("Failed to publish post.");
                 }
-            });
-        });
+            }
+        
+            postContent.addEventListener("input", () => updateDraft(postContent.value));
+            imageUpload.addEventListener("change", (event) => uploadMedia(event.target.files[0], "image"));
+            fileUpload.addEventListener("change", (event) => uploadMedia(event.target.files[0], "file"));
+            videoUpload.addEventListener("change", (event) => uploadMedia(event.target.files[0], "video"));
+            postButton.addEventListener("click", publishDraft);
+        });        
+        
         
     </script>
 </body>
